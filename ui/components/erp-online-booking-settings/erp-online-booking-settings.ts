@@ -1,11 +1,6 @@
-import { Component, State, h } from '@stencil/core';
-
-// Web Component del módulo `online_booking` (Stencil): configuración (singleton por hub)
-// de la página pública de reservas. Es la segunda vista que carga el shell vía ui.entry.
-//
-// El componente NO toca la BD: llama al SDK (erplora.query/command). El get-or-create del
-// singleton con defaults vive en runtime — ver WASM-TODO.md; aquí, si la query devuelve
-// vacío, se muestran los defaults del schema y el upsert crea la fila.
+import { LitElement, html, css, nothing } from 'lit';
+import { state } from 'lit/decorators.js';
+import { define } from '@erplora/outfitkit/define';
 
 interface ErploraClientLike {
   query<T = unknown>(name: string, params?: Record<string, unknown>): Promise<T>;
@@ -54,10 +49,8 @@ function erplora(): ErploraClientLike {
   return c;
 }
 
-@Component({
-  tag: 'erp-online-booking-settings',
-  shadow: true,
-  styles: `
+export class ErpOnlineBookingSettings extends LitElement {
+  static styles = css`
     :host { display:block; font-family: system-ui, sans-serif; color: var(--ink, #1c1b18); }
     header { display:flex; gap:.5rem; align-items:center; margin-bottom:.75rem; }
     h2 { margin:0; font-size:1.15rem; flex:1; }
@@ -68,16 +61,23 @@ function erplora(): ErploraClientLike {
     .err { color:#d9480f; font-weight:600; }
     .ok { color:#2b8a3e; font-weight:600; }
     .actions { display:flex; gap:.5rem; margin-top:.5rem; }
-  `,
-})
-export class ErpOnlineBookingSettings {
-  @State() s: Settings = { ...DEFAULTS };
-  @State() loading = true;
-  @State() saving = false;
-  @State() error = '';
-  @State() saved = false;
+  `;
 
-  async componentWillLoad() {
+  @state() s: Settings = { ...DEFAULTS };
+
+  @state() loading = true;
+
+  @state() saving = false;
+
+  @state() error = '';
+
+  @state() saved = false;
+
+  // TODO-LIT: componentWillLoad → connectedCallback. Recuerda: connectedCallback se dispara
+  // en CADA reconexión al DOM (no solo en el primer montaje). Si la init debe correr una
+  // sola vez tras el primer render, considera firstUpdated() en su lugar.
+  async connectedCallback() {
+    super.connectedCallback();
     await this.refresh();
   }
 
@@ -133,146 +133,81 @@ export class ErpOnlineBookingSettings {
   }
 
   render() {
-    return (
-      <form onSubmit={(e) => this.save(e)}>
+    return html`<form @submit=${(e) => this.save(e)}>
         <header>
           <h2>Configuración de la página de reservas</h2>
         </header>
-
-        {this.error && <p class="err">{this.error}</p>}
-        {this.saved && <p class="ok">Configuración guardada.</p>}
-
-        <div class="row" style={{ marginBottom: '1rem' }}>
-          <ion-toggle
-            checked={!!this.s.is_enabled}
-            onIonChange={(e: any) => this.set('is_enabled', e.target.checked ? 1 : 0)}
-          />
+        ${this.error ? html`<p class="err">${this.error}</p>` : nothing}
+        ${this.saved ? html`<p class="ok">Configuración guardada.</p>` : nothing}
+        <div class="row" style="margin-bottom:1rem">
+          <ion-toggle ?checked=${!!this.s.is_enabled} @ionChange=${(e: any) => this.set('is_enabled', e.target.checked ? 1 : 0)}></ion-toggle>
           <label>Página pública activada</label>
         </div>
-
         <div class="grid">
           <div class="field">
             <label>Título de la página</label>
-            <ion-input
-              value={this.s.page_title}
-              onIonInput={(e: any) => this.set('page_title', e.target.value)}
-            />
+            <ion-input .value=${this.s.page_title} @ionInput=${(e: any) => this.set('page_title', e.target.value)}></ion-input>
           </div>
           <div class="field">
             <label>Color primario</label>
-            <ion-input
-              value={this.s.primary_color}
-              onIonInput={(e: any) => this.set('primary_color', e.target.value)}
-            />
+            <ion-input .value=${this.s.primary_color} @ionInput=${(e: any) => this.set('primary_color', e.target.value)}></ion-input>
           </div>
           <div class="field">
             <label>URL del logo</label>
-            <ion-input
-              value={this.s.logo_url}
-              onIonInput={(e: any) => this.set('logo_url', e.target.value)}
-            />
+            <ion-input .value=${this.s.logo_url} @ionInput=${(e: any) => this.set('logo_url', e.target.value)}></ion-input>
           </div>
           <div class="field">
             <label>Antelación mínima (horas)</label>
-            <ion-input
-              type="number"
-              min="0"
-              max="168"
-              value={String(this.s.min_advance_hours)}
-              onIonInput={(e: any) => this.set('min_advance_hours', Number(e.target.value))}
-            />
+            <ion-input type="number" min="0" max="168" .value=${String(this.s.min_advance_hours)} @ionInput=${(e: any) => this.set('min_advance_hours', Number(e.target.value))}></ion-input>
           </div>
           <div class="field">
             <label>Antelación máxima (días)</label>
-            <ion-input
-              type="number"
-              min="1"
-              max="365"
-              value={String(this.s.max_advance_days)}
-              onIonInput={(e: any) => this.set('max_advance_days', Number(e.target.value))}
-            />
+            <ion-input type="number" min="1" max="365" .value=${String(this.s.max_advance_days)} @ionInput=${(e: any) => this.set('max_advance_days', Number(e.target.value))}></ion-input>
           </div>
           <div class="field">
             <label>Duración de slot (min)</label>
-            <ion-input
-              type="number"
-              min="5"
-              max="480"
-              value={String(this.s.slot_duration_minutes)}
-              onIonInput={(e: any) => this.set('slot_duration_minutes', Number(e.target.value))}
-            />
+            <ion-input type="number" min="5" max="480" .value=${String(this.s.slot_duration_minutes)} @ionInput=${(e: any) => this.set('slot_duration_minutes', Number(e.target.value))}></ion-input>
           </div>
           <div class="field">
             <label>Buffer entre reservas (min)</label>
-            <ion-input
-              type="number"
-              min="0"
-              max="120"
-              value={String(this.s.buffer_minutes)}
-              onIonInput={(e: any) => this.set('buffer_minutes', Number(e.target.value))}
-            />
+            <ion-input type="number" min="0" max="120" .value=${String(this.s.buffer_minutes)} @ionInput=${(e: any) => this.set('buffer_minutes', Number(e.target.value))}></ion-input>
           </div>
         </div>
-
         <div class="grid">
           <div class="row">
-            <ion-toggle
-              checked={!!this.s.require_phone}
-              onIonChange={(e: any) => this.set('require_phone', e.target.checked ? 1 : 0)}
-            />
+            <ion-toggle ?checked=${!!this.s.require_phone} @ionChange=${(e: any) => this.set('require_phone', e.target.checked ? 1 : 0)}></ion-toggle>
             <label>Teléfono obligatorio</label>
           </div>
           <div class="row">
-            <ion-toggle
-              checked={!!this.s.require_email}
-              onIonChange={(e: any) => this.set('require_email', e.target.checked ? 1 : 0)}
-            />
+            <ion-toggle ?checked=${!!this.s.require_email} @ionChange=${(e: any) => this.set('require_email', e.target.checked ? 1 : 0)}></ion-toggle>
             <label>Email obligatorio</label>
           </div>
           <div class="row">
-            <ion-toggle
-              checked={!!this.s.allow_staff_selection}
-              onIonChange={(e: any) => this.set('allow_staff_selection', e.target.checked ? 1 : 0)}
-            />
+            <ion-toggle ?checked=${!!this.s.allow_staff_selection} @ionChange=${(e: any) => this.set('allow_staff_selection', e.target.checked ? 1 : 0)}></ion-toggle>
             <label>Permitir elegir personal</label>
           </div>
           <div class="row">
-            <ion-toggle
-              checked={!!this.s.allow_notes}
-              onIonChange={(e: any) => this.set('allow_notes', e.target.checked ? 1 : 0)}
-            />
+            <ion-toggle ?checked=${!!this.s.allow_notes} @ionChange=${(e: any) => this.set('allow_notes', e.target.checked ? 1 : 0)}></ion-toggle>
             <label>Permitir notas</label>
           </div>
         </div>
-
         <div class="field">
           <label>Mensaje de bienvenida</label>
-          <ion-textarea
-            value={this.s.welcome_message}
-            onIonInput={(e: any) => this.set('welcome_message', e.target.value)}
-          />
+          <ion-textarea .value=${this.s.welcome_message} @ionInput=${(e: any) => this.set('welcome_message', e.target.value)}></ion-textarea>
         </div>
         <div class="field">
           <label>Mensaje de confirmación</label>
-          <ion-textarea
-            value={this.s.confirmation_message}
-            onIonInput={(e: any) => this.set('confirmation_message', e.target.value)}
-          />
+          <ion-textarea .value=${this.s.confirmation_message} @ionInput=${(e: any) => this.set('confirmation_message', e.target.value)}></ion-textarea>
         </div>
         <div class="field">
           <label>Política de cancelación</label>
-          <ion-textarea
-            value={this.s.cancellation_policy}
-            onIonInput={(e: any) => this.set('cancellation_policy', e.target.value)}
-          />
+          <ion-textarea .value=${this.s.cancellation_policy} @ionInput=${(e: any) => this.set('cancellation_policy', e.target.value)}></ion-textarea>
         </div>
-
         <div class="actions">
-          <ion-button type="submit" disabled={this.saving || this.loading}>
-            {this.saving ? 'Guardando…' : 'Guardar'}
-          </ion-button>
+          <ion-button type="submit" ?disabled=${this.saving || this.loading}>${this.saving ? 'Guardando…' : 'Guardar'}</ion-button>
         </div>
-      </form>
-    );
+      </form>`;
   }
 }
+
+define('erp-online-booking-settings', ErpOnlineBookingSettings);

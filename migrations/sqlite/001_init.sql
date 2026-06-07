@@ -2,7 +2,7 @@
 -- old_modules/m_online_booking/models.py.
 -- Modelos: BookingPageSettings (singleton por hub: configuración de la página pública
 -- de reservas) y OnlineBooking (una reserva concreta, manual o desde la página pública).
--- Contrato de fila estándar de hub-next (§2.5): hub_id + soft-delete + auditoría.
+-- Contrato de fila estándar de hub (§2.5): hub_id + soft-delete + auditoría.
 
 -- Configuración de la página pública de reservas. Singleton por hub: garantizado por
 -- el índice único ix_ob_settings_hub. El "get-or-create" del singleton (defaults) y la
