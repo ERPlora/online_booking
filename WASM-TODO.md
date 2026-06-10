@@ -11,29 +11,32 @@ Origen: `models.py`, `services.py` (`BookingService`, `convert_to_target`), `rou
 
 ---
 
-## 1. Generación atómica de `booking_reference` (BK-00001)
+## 1. Generación atómica de `booking_reference` (BK-00001) — ✅ RESUELTO (SQL declarativo)
 
 - **Origen**: `OnlineBooking.generate_reference()` — `SELECT max(booking_reference)` con
  `LIKE 'BK-%'`, parsea el número y devuelve `BK-{n+1:05d}`.
-- **Por qué no es SQL declarativo**: contador atómico por hub con riesgo de carrera
- (dos altas simultáneas → misma referencia). El `commands/booking_create.sql` recibe
- `:booking_reference` ya calculado.
-- **Handler WASM**: `next_booking_reference(hub_id) -> str`. El runtime debe garantizar
- atomicidad (transacción/lock) al combinar el cálculo con el INSERT.
+- **Resolución (2026-06-10, issue #1)**: NO hizo falta handler — patrón `sales_sale_counter`
+ ("sin read-back desde el guest"): tabla `online_booking_reference_counter` (002), el command
+ `bookings.create` ejecuta `commands/_bump_reference.sql` (upsert +1; primera alta siembra
+ desde el `max()` de referencias `BK-%` legacy) y `commands/booking_create.sql` lee el
+ contador con subquery — todo en la MISMA transacción. El upsert serializa altas concurrentes
+ sobre la fila del hub; único e incremental por hub. `printf()` es SQLite (Postgres: `lpad()`).
 
-## 2. Transiciones de estado válidas (invariant)
+## 2. Transiciones de estado válidas (invariant) — ✅ RESUELTO (triggers SQL)
 
 - **Origen**: `services._VALID_STATUS_TRANSITIONS` + `update_status`.
  - `confirm`: solo desde `pending`
  - `cancel`: desde `pending` o `confirmed`
  - `complete`: solo desde `confirmed`
  - `no_show`: solo desde `confirmed`
-- **Estado en SQL**: los `commands/booking_{confirm,cancel,complete,no_show}.sql` aplican
- un guard mínimo en el `WHERE status = ...`, pero **no** devuelven un error explicativo
- si la transición es inválida (solo no afectan filas).
-- **Handler WASM / invariant**: validar la transición antes del UPDATE y devolver un error
- legible (p.ej. "Cannot 'complete' a booking with status 'pending'"). Registrar como
- invariant en el registro de invariants del runtime.
+- **Resolución (2026-06-10, issue #2)**: el runtime Rust no tiene registro de invariants y
+ los handlers WASM no tienen lecturas de BD, así que el invariant se impone con **triggers**
+ `BEFORE UPDATE OF status` + `RAISE(ABORT, '<mensaje legible>')` en la migración
+ `003_status_transition_guards.sql` (uno por estado destino; `RAISE()` exige mensaje
+ constante). Una transición inválida aborta la transacción y el mensaje llega al caller
+ (`{ok:false, error}` → la UI lo muestra en `formError`). Los `WHERE status = ...` de los
+ commands se retiraron para que el trigger dispare en vez de un no-op silencioso de 0 filas.
+ Si algún día existe el registro de invariants del runtime, puede sustituir a los triggers.
 
 ## 3. Validación de fecha/hora futura + reglas de antelación
 

@@ -54,7 +54,8 @@
   "migrations": {
     "sqlite": [
       "migrations/sqlite/001_init.sql",
-      "migrations/sqlite/002_reference_counter.sql"
+      "migrations/sqlite/002_reference_counter.sql",
+      "migrations/sqlite/003_status_transition_guards.sql"
     ]
   },
   "queries": {
