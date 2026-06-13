@@ -1,0 +1,7 @@
+-- Online_booking · 004_booking_window_guards.sql (Postgres).
+-- Los guards de 004_booking_window_guards se implementaron como TRIGGERS
+-- SQLite (strftime/datetime/RAISE), que NO traducen a Postgres de forma
+-- mecánica. En cloud son defensa-en-profundidad redundante: el runtime
+-- valida el mismo write en origen (local-first, ADR-0031) antes de sincronizar.
+-- PENDIENTE (columna humano): reimplementar como trigger plpgsql si se quiere
+-- el guard también server-side. Por ahora: no-op portable.

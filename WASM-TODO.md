@@ -38,15 +38,22 @@ Origen: `models.py`, `services.py` (`BookingService`, `convert_to_target`), `rou
  commands se retiraron para que el trigger dispare en vez de un no-op silencioso de 0 filas.
  Si algún día existe el registro de invariants del runtime, puede sustituir a los triggers.
 
-## 3. Validación de fecha/hora futura + reglas de antelación
+## 3. Validación de fecha/hora futura + reglas de antelación — ✅ RESUELTO (triggers SQL)
 
 - **Origen**: `create_booking` — `booking_dt <= now → error` y, conceptualmente, las reglas
  de `min_advance_hours` / `max_advance_days` / `slot_duration_minutes` / `buffer_minutes`
  de `BookingPageSettings`.
-- **Por qué no es SQL**: requiere `now()` con timezone, combinar fecha+hora y comparar
- contra los settings del hub.
-- **Handler WASM**: `validate_booking_window(settings, booking_date, booking_time, duration)`
- → ok | error. Debe ejecutarse antes de `online_booking.bookings.create`.
+- **Resolución (2026-06-11, issue #3)**: el contrato del handler WASM sigue sin lecturas
+ de BD (el guest no puede cargar los settings del hub), así que —como §1/§2— se impone
+ con **triggers** `BEFORE INSERT` + `RAISE(ABORT, …)` en la migración
+ `004_booking_window_guards.sql`, dentro de la misma transacción que el INSERT:
+ formato fecha/hora válido, fecha futura, `min_advance_hours`, `max_advance_days` y
+ alineación de la hora al slot (`slot_duration_minutes`, anclado a medianoche — los
+ settings no guardan horario de apertura). Sin fila de settings aplican los defaults
+ del producto vía `COALESCE` (2h / 30d / 30min). "Ahora" = `datetime('now','localtime')`
+ (hora de pared del negocio; en cloud el contenedor debe llevar la TZ del hub).
+ `buffer_minutes` se aplica en la detección de solape (§4), no aquí. Si existe algún
+ día un registro de invariants/lecturas para handlers, puede sustituir a los triggers.
 
 ## 4. Detección de doble reserva por staff (solapamiento)
 
