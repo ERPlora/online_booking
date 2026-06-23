@@ -1,0 +1,11 @@
+{
+  "name": "Reservas online",
+  "navigation": {
+    "bookings": {
+      "label": "Reservas"
+    },
+    "settings": {
+      "label": "Ajustes"
+    }
+  }
+}

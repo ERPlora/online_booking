@@ -1,0 +1,11 @@
+{
+  "name": "Online Booking",
+  "navigation": {
+    "bookings": {
+      "label": "Bookings"
+    },
+    "settings": {
+      "label": "Settings"
+    }
+  }
+}
