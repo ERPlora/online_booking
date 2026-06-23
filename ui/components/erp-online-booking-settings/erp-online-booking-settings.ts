@@ -162,32 +162,25 @@ export class ErpOnlineBookingSettings extends LitElement {
         </div>
         <div class="grid">
           <div class="field">
-            <label>${t('ui.labelPageTitle')}</label>
-            <ion-input .value=${this.s.page_title} @ionInput=${(e: any) => this.set('page_title', e.target.value)}></ion-input>
+            <ion-input fill="outline" label-placement="floating" label=${t('ui.labelPageTitle')} .value=${this.s.page_title} @ionInput=${(e: any) => this.set('page_title', e.target.value)}></ion-input>
           </div>
           <div class="field">
-            <label>${t('ui.labelPrimaryColor')}</label>
-            <ion-input .value=${this.s.primary_color} @ionInput=${(e: any) => this.set('primary_color', e.target.value)}></ion-input>
+            <ion-input fill="outline" label-placement="floating" label=${t('ui.labelPrimaryColor')} .value=${this.s.primary_color} @ionInput=${(e: any) => this.set('primary_color', e.target.value)}></ion-input>
           </div>
           <div class="field">
-            <label>${t('ui.labelLogoUrl')}</label>
-            <ion-input .value=${this.s.logo_url} @ionInput=${(e: any) => this.set('logo_url', e.target.value)}></ion-input>
+            <ion-input fill="outline" label-placement="floating" label=${t('ui.labelLogoUrl')} .value=${this.s.logo_url} @ionInput=${(e: any) => this.set('logo_url', e.target.value)}></ion-input>
           </div>
           <div class="field">
-            <label>${t('ui.labelMinAdvanceHours')}</label>
-            <ion-input type="number" min="0" max="168" .value=${String(this.s.min_advance_hours)} @ionInput=${(e: any) => this.set('min_advance_hours', Number(e.target.value))}></ion-input>
+            <ion-input fill="outline" label-placement="floating" label=${t('ui.labelMinAdvanceHours')} type="number" min="0" max="168" .value=${String(this.s.min_advance_hours)} @ionInput=${(e: any) => this.set('min_advance_hours', Number(e.target.value))}></ion-input>
           </div>
           <div class="field">
-            <label>${t('ui.labelMaxAdvanceDays')}</label>
-            <ion-input type="number" min="1" max="365" .value=${String(this.s.max_advance_days)} @ionInput=${(e: any) => this.set('max_advance_days', Number(e.target.value))}></ion-input>
+            <ion-input fill="outline" label-placement="floating" label=${t('ui.labelMaxAdvanceDays')} type="number" min="1" max="365" .value=${String(this.s.max_advance_days)} @ionInput=${(e: any) => this.set('max_advance_days', Number(e.target.value))}></ion-input>
           </div>
           <div class="field">
-            <label>${t('ui.labelSlotDuration')}</label>
-            <ion-input type="number" min="5" max="480" .value=${String(this.s.slot_duration_minutes)} @ionInput=${(e: any) => this.set('slot_duration_minutes', Number(e.target.value))}></ion-input>
+            <ion-input fill="outline" label-placement="floating" label=${t('ui.labelSlotDuration')} type="number" min="5" max="480" .value=${String(this.s.slot_duration_minutes)} @ionInput=${(e: any) => this.set('slot_duration_minutes', Number(e.target.value))}></ion-input>
           </div>
           <div class="field">
-            <label>${t('ui.labelBuffer')}</label>
-            <ion-input type="number" min="0" max="120" .value=${String(this.s.buffer_minutes)} @ionInput=${(e: any) => this.set('buffer_minutes', Number(e.target.value))}></ion-input>
+            <ion-input fill="outline" label-placement="floating" label=${t('ui.labelBuffer')} type="number" min="0" max="120" .value=${String(this.s.buffer_minutes)} @ionInput=${(e: any) => this.set('buffer_minutes', Number(e.target.value))}></ion-input>
           </div>
         </div>
         <div class="grid">
@@ -209,16 +202,13 @@ export class ErpOnlineBookingSettings extends LitElement {
           </div>
         </div>
         <div class="field">
-          <label>${t('ui.labelWelcomeMessage')}</label>
-          <ion-textarea .value=${this.s.welcome_message} @ionInput=${(e: any) => this.set('welcome_message', e.target.value)}></ion-textarea>
+          <ion-textarea fill="outline" label-placement="floating" label=${t('ui.labelWelcomeMessage')} .value=${this.s.welcome_message} @ionInput=${(e: any) => this.set('welcome_message', e.target.value)}></ion-textarea>
         </div>
         <div class="field">
-          <label>${t('ui.labelConfirmationMessage')}</label>
-          <ion-textarea .value=${this.s.confirmation_message} @ionInput=${(e: any) => this.set('confirmation_message', e.target.value)}></ion-textarea>
+          <ion-textarea fill="outline" label-placement="floating" label=${t('ui.labelConfirmationMessage')} .value=${this.s.confirmation_message} @ionInput=${(e: any) => this.set('confirmation_message', e.target.value)}></ion-textarea>
         </div>
         <div class="field">
-          <label>${t('ui.labelCancellationPolicy')}</label>
-          <ion-textarea .value=${this.s.cancellation_policy} @ionInput=${(e: any) => this.set('cancellation_policy', e.target.value)}></ion-textarea>
+          <ion-textarea fill="outline" label-placement="floating" label=${t('ui.labelCancellationPolicy')} .value=${this.s.cancellation_policy} @ionInput=${(e: any) => this.set('cancellation_policy', e.target.value)}></ion-textarea>
         </div>
         <div class="actions">
           <ion-button type="submit" ?disabled=${this.saving || this.loading}>${this.saving ? t('ui.buttonSaving') : t('ui.buttonSave')}</ion-button>

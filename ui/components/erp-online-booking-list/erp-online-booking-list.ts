@@ -60,8 +60,8 @@ export class ErpOnlineBookingList extends LitElement {
     :host { display:block; font-family: system-ui, sans-serif; color: var(--ink, #1c1b18); }
     header { display:flex; gap:.5rem; align-items:center; margin-bottom:.75rem; }
     h2 { margin:0; font-size:1.15rem; flex:1; }
-    .form { display:flex; gap:.5rem; flex-wrap:wrap; align-items:end; margin:.5rem 0 1rem; }
-    .form ion-input, .form ion-select { --background:var(--surface-2,#f7f4ec); border:1px solid var(--line,#e7e2d6); border-radius:8px; min-width:8rem; }
+    .form { display:flex; gap:.75rem; flex-wrap:wrap; align-items:end; margin:.5rem 0 1.25rem; }
+    .form ion-input, .form ion-select { flex:1 1 11rem; min-width:9rem; }
     .err { color:#d9480f; font-weight:600; }
   `;
 
@@ -227,12 +227,12 @@ export class ErpOnlineBookingList extends LitElement {
           <h2>${t('ui.title')}</h2>
         </header>
         <form class="form" @submit=${(e) => this.createBooking(e)}>
-          <ion-input placeholder=${t('ui.placeholderCustomer')} .value=${this.newCustomer} @ionInput=${(e: any) => (this.newCustomer = e.target.value)}></ion-input>
-          <ion-input placeholder=${t('ui.placeholderService')} .value=${this.newService} @ionInput=${(e: any) => (this.newService = e.target.value)}></ion-input>
-          <ion-input placeholder=${t('ui.placeholderStaff')} .value=${this.newStaff} @ionInput=${(e: any) => (this.newStaff = e.target.value)}></ion-input>
-          <ion-input type="date" .value=${this.newDate} @ionInput=${(e: any) => (this.newDate = e.target.value)}></ion-input>
-          <ion-input type="time" .value=${this.newTime} @ionInput=${(e: any) => (this.newTime = e.target.value)}></ion-input>
-          <ion-input type="number" min="5" step="5" placeholder=${t('ui.placeholderDuration')} .value=${this.newDuration} @ionInput=${(e: any) => (this.newDuration = e.target.value)}></ion-input>
+          <ion-input fill="outline" label-placement="floating" label=${t('ui.colCustomer')} .value=${this.newCustomer} @ionInput=${(e: any) => (this.newCustomer = e.target.value)}></ion-input>
+          <ion-input fill="outline" label-placement="floating" label=${t('ui.colService')} .value=${this.newService} @ionInput=${(e: any) => (this.newService = e.target.value)}></ion-input>
+          <ion-input fill="outline" label-placement="floating" label=${t('ui.placeholderStaff')} .value=${this.newStaff} @ionInput=${(e: any) => (this.newStaff = e.target.value)}></ion-input>
+          <ion-input fill="outline" label-placement="floating" label=${t('ui.colDate')} type="date" .value=${this.newDate} @ionInput=${(e: any) => (this.newDate = e.target.value)}></ion-input>
+          <ion-input fill="outline" label-placement="floating" label=${t('ui.colTime')} type="time" .value=${this.newTime} @ionInput=${(e: any) => (this.newTime = e.target.value)}></ion-input>
+          <ion-input fill="outline" label-placement="floating" label=${t('ui.placeholderDuration')} type="number" min="5" step="5" .value=${this.newDuration} @ionInput=${(e: any) => (this.newDuration = e.target.value)}></ion-input>
           <ion-button type="submit" size="small" ?disabled=${this.saving || !this.newCustomer || !this.newService || !this.newDate || !this.newTime}>${this.saving ? t('ui.buttonSaving') : t('ui.buttonAdd')}</ion-button>
         </form>
         ${this.formError ? html`<p class="err">${this.formError}</p>` : nothing}
