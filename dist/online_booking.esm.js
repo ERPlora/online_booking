@@ -9,7 +9,7 @@ var __decorateClass = (decorators, target, key, kind) => {
   return result;
 };
 
-// ../module-toolkit/node_modules/@lit-labs/ssr-dom-shim/lib/element-internals.js
+// node_modules/@lit-labs/ssr-dom-shim/lib/element-internals.js
 var ElementInternalsShim = class ElementInternals {
   get shadowRoot() {
     return this.__host.__shadowRoot;
@@ -88,7 +88,7 @@ var ElementInternalsShim = class ElementInternals {
   }
 };
 
-// ../module-toolkit/node_modules/@lit-labs/ssr-dom-shim/lib/events.js
+// node_modules/@lit-labs/ssr-dom-shim/lib/events.js
 var __classPrivateFieldSet = function(receiver, state, value, kind, f3) {
   if (kind === "m") throw new TypeError("Private method is not writable");
   if (kind === "a" && !f3) throw new TypeError("Private accessor was defined without a setter");
@@ -246,7 +246,7 @@ Object.defineProperties(CustomEventShim.prototype, {
 var EventShimWithRealType = EventShim;
 var CustomEventShimWithRealType = CustomEventShim;
 
-// ../module-toolkit/node_modules/@lit-labs/ssr-dom-shim/lib/css.js
+// node_modules/@lit-labs/ssr-dom-shim/lib/css.js
 var _a2;
 var CSSRuleShim = (_a2 = class CSSRule {
   constructor() {
@@ -277,7 +277,7 @@ var CSSRuleShim = (_a2 = class CSSRule {
   }
 }, _a2.STYLE_RULE = 1, _a2.CHARSET_RULE = 2, _a2.IMPORT_RULE = 3, _a2.MEDIA_RULE = 4, _a2.FONT_FACE_RULE = 5, _a2.PAGE_RULE = 6, _a2.NAMESPACE_RULE = 10, _a2.KEYFRAMES_RULE = 7, _a2.KEYFRAME_RULE = 8, _a2.SUPPORTS_RULE = 12, _a2.COUNTER_STYLE_RULE = 11, _a2.FONT_FEATURE_VALUES_RULE = 14, _a2.MARGIN_RULE = 9, _a2);
 
-// ../module-toolkit/node_modules/@lit-labs/ssr-dom-shim/index.js
+// node_modules/@lit-labs/ssr-dom-shim/index.js
 globalThis.Event ??= EventShimWithRealType;
 globalThis.CustomEvent ??= CustomEventShimWithRealType;
 var constructionToken = Symbol();
@@ -674,7 +674,7 @@ var CustomElementRegistryShimWithRealType = CustomElementRegistry;
 var customElements2 = new CustomElementRegistryShimWithRealType();
 var windowShim = new WindowShim(constructionToken);
 
-// ../module-toolkit/node_modules/@lit/reactive-element/node/css-tag.js
+// node_modules/@lit/reactive-element/node/css-tag.js
 var t = globalThis;
 var e = t.ShadowRoot && (void 0 === t.ShadyCSS || t.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype;
 var s = Symbol();
@@ -719,7 +719,7 @@ var c = e || void 0 === t.CSSStyleSheet ? (t5) => t5 : (t5) => t5 instanceof CSS
   return r(e5);
 })(t5) : t5;
 
-// ../module-toolkit/node_modules/@lit/reactive-element/node/reactive-element.js
+// node_modules/@lit/reactive-element/node/reactive-element.js
 var { is: h, defineProperty: r2, getOwnPropertyDescriptor: o2, getOwnPropertyNames: n2, getOwnPropertySymbols: a, getPrototypeOf: c2 } = Object;
 var l = globalThis;
 l.customElements ??= customElements2;
@@ -942,7 +942,7 @@ var g = class extends (globalThis.HTMLElement ?? HTMLElementShimWithRealType) {
 };
 g.elementStyles = [], g.shadowRootOptions = { mode: "open" }, g[f("elementProperties")] = /* @__PURE__ */ new Map(), g[f("finalized")] = /* @__PURE__ */ new Map(), u?.({ ReactiveElement: g }), (l.reactiveElementVersions ??= []).push("2.1.2");
 
-// ../module-toolkit/node_modules/lit-html/lit-html.js
+// node_modules/lit-html/lit-html.js
 var t2 = globalThis;
 var i2 = (t5) => t5;
 var s2 = t2.trustedTypes;
@@ -1197,7 +1197,7 @@ var D = (t5, i7, s5) => {
   return h4._$AI(t5), h4;
 };
 
-// ../module-toolkit/node_modules/lit-element/lit-element.js
+// node_modules/lit-element/lit-element.js
 var s3 = globalThis;
 var i3 = class extends g {
   constructor() {
@@ -1226,7 +1226,7 @@ var o4 = s3.litElementPolyfillSupport;
 o4?.({ LitElement: i3 });
 (s3.litElementVersions ??= []).push("4.2.2");
 
-// ../module-toolkit/node_modules/@lit/reactive-element/node/decorators/property.js
+// node_modules/@lit/reactive-element/node/decorators/property.js
 var o5 = { attribute: true, type: String, converter: b, reflect: false, hasChanged: m };
 var r4 = (t5 = o5, e5, r6) => {
   const { kind: n6, metadata: i7 } = r6;
@@ -1256,7 +1256,7 @@ function n4(t5) {
   })(t5, e5, o7);
 }
 
-// ../module-toolkit/node_modules/@lit/reactive-element/node/decorators/state.js
+// node_modules/@lit/reactive-element/node/decorators/state.js
 function r5(r6) {
   return n4({ ...r6, state: true, attribute: false });
 }
@@ -1268,7 +1268,7 @@ function define(tag, ctor) {
   }
 }
 
-// ../module-toolkit/node_modules/lit-html/directive.js
+// node_modules/lit-html/directive.js
 var t3 = { ATTRIBUTE: 1, CHILD: 2, PROPERTY: 3, BOOLEAN_ATTRIBUTE: 4, EVENT: 5, ELEMENT: 6 };
 var e4 = (t5) => (...e5) => ({ _$litDirective$: t5, values: e5 });
 var i4 = class {
@@ -1288,7 +1288,7 @@ var i4 = class {
   }
 };
 
-// ../module-toolkit/node_modules/lit-html/directive-helpers.js
+// node_modules/lit-html/directive-helpers.js
 var { I: t4 } = j;
 var i5 = (o7) => o7;
 var s4 = () => document.createComment("");
@@ -1321,7 +1321,7 @@ var h3 = (o7) => {
   o7._$AR(), o7._$AA.remove();
 };
 
-// ../module-toolkit/node_modules/lit-html/directives/repeat.js
+// node_modules/lit-html/directives/repeat.js
 var u4 = (e5, s5, t5) => {
   const r6 = /* @__PURE__ */ new Map();
   for (let l3 = s5; l3 <= t5; l3++) r6.set(e5[l3], l3);
@@ -1374,7 +1374,7 @@ var c4 = e4(class extends i4 {
   }
 });
 
-// ../module-toolkit/node_modules/lit-html/directives/style-map.js
+// node_modules/lit-html/directives/style-map.js
 var n5 = "important";
 var i6 = " !" + n5;
 var o6 = e4(class extends i4 {
@@ -1462,7 +1462,7 @@ var OkDataTable = class extends i3 {
     this.addable = false;
     this.pageSizeOptions = [10, 25, 50, 100];
     this.fill = false;
-    this.columnPicker = false;
+    this.columnPicker = true;
     this.csv = false;
     this.csvName = "export.csv";
     this.serverSide = false;
@@ -1571,22 +1571,34 @@ var OkDataTable = class extends i3 {
 
     /* ── Topbar / cabecera (relieve) ─────────────────────────────────────────────────────── */
     .bar { display: flex; flex-direction: column; gap: 0.6rem; padding: 0.65rem 1rem; border-bottom: 1px solid var(--border-color); background: var(--header-background); }
+    /* Toolbar CONSOLIDADA: TODOS los controles son hijos directos de UNA sola fila flex que
+     * envuelve ELEMENTO A ELEMENTO (no por bloques): caben en una línea → una línea; los que no
+     * caben bajan a la(s) línea(s) que hagan falta. El cluster derecho se empuja al borde con
+     * .tk-spacer (hueco flexible) solo cuando todo cabe en una línea; al envolver, el spacer se
+     * oculta y todo se apila a la izquierda.
+     * ORDEN CANÓNICO (2026-06-22, izquierda→derecha): [buscador] · [filtros en línea] · ‹spacer› ·
+     * [SELECTORES: columnas → filas/página] · [BOTONES: vistas → filtros(funnel) → import → export →
+     * alta → ⋮ → acción primaria]. Es decir: buscador al inicio, filtros en medio, y al final los
+     * selectores (columnas, luego «N por página») seguidos de los botones de acción. */
     .bar-main { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
-    .title-wrap { display: flex; align-items: baseline; gap: 0.5rem; margin-right: auto; }
+    .bar-main > ion-button { --padding-start: 0.5rem; --padding-end: 0.5rem; margin: 0; }
+    /* Spacer que absorbe el hueco libre en pantallas anchas (empuja el cluster derecho al borde).
+     * Se oculta por debajo de 1024px para que, al envolver, los controles se apilen a la izquierda. */
+    .tk-spacer { flex: 1 1 0; min-width: 0; align-self: stretch; }
+    @media (max-width: 1024px) { .tk-spacer { display: none; } }
+    /* Buscador a ancho completo (línea propia) en móvil; el resto envuelve debajo. */
+    @media (max-width: 640px) { .search { flex-basis: 100%; max-width: none; } }
+    .title-wrap { display: flex; align-items: baseline; gap: 0.5rem; }
     .title { font-size: 15px; font-weight: 600; line-height: 1; margin: 0; }
     .title-count { font-size: 12px; font-weight: 500; color: var(--color-muted); }
-    /* flex-wrap: en pantallas estrechas los controles (y el slot "toolbar",
-     * p.ej. selects de filtro del host) saltan de línea en vez de desbordar
-     * recortados por el borde derecho (cloud#551). */
-    .bar-end { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }
-    .bar-end ion-button { --padding-start: 0.5rem; --padding-end: 0.5rem; margin: 0; }
 
     /* Botón de herramienta cuadrado (filtros/import/export), look del Hub: 36×36, badge contador. */
     .toolbtn { position: relative; --padding-start: 0; --padding-end: 0; --border-radius: 10px; width: 36px; height: 36px; margin: 0; }
     .toolbtn .badge { position: absolute; top: -5px; right: -5px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 999px; background: var(--primary); color: var(--primary-contrast); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; pointer-events: none; }
 
-    /* Buscador (caja con icono + limpiar), look del Hub */
-    .search { flex: 1 1 12rem; min-width: 10rem; max-width: 22rem; }
+    /* Buscador (caja con icono + limpiar), look del Hub. No crece (el spacer se queda el hueco);
+     * puede encoger hasta min-width y, por debajo, envuelve. */
+    .search { flex: 0 1 22rem; min-width: 12rem; max-width: 24rem; }
     ion-searchbar { --background: var(--background); --border-radius: 10px; padding: 0; min-height: 36px; }
     /* Flat: el buscador quita borde y elevación vía la clase específica de Ionic 'ion-no-border'.
      * (La regla global de Ionic para .ion-no-border no cruza el Shadow DOM, así que la
@@ -2275,9 +2287,22 @@ var OkDataTable = class extends i3 {
               <div class="bar">
                 <div class="bar-main">
                   ${this.title ? b2`<div class="title-wrap"><h2 class="title">${this.title}</h2><span class="title-count">${count}</span></div>` : A}
-                  ${this.hasSearch ? b2`<div class="search">${searchbar}</div>` : this.title ? A : b2`<span style="margin-right:auto"></span>`}
+                  ${this.hasSearch ? b2`<div class="search">${searchbar}</div>` : A}
                   ${this.inlineFilters ? this.renderInlineFilters() : A}
-                  <div class="bar-end">
+                  <span class="tk-spacer"></span>
+                    ${this.effColumnPicker ? b2`
+                          <ion-select
+                            class="tk-cols"
+                            multiple
+                            interface="popover"
+                            aria-label=${this.t.columnsVisible}
+                            .value=${this.visibleColumns.map((c5) => c5.key)}
+                            .selectedText=${this.t.columns}
+                            @ionChange=${(e5) => this.setVisibleColumns(e5.detail.value)}
+                          >
+                            ${this.columns.map((c5) => b2`<ion-select-option value=${c5.key}>${c5.header}</ion-select-option>`)}
+                          </ion-select>
+                        ` : A}
                     ${this.effPageSizes.length ? b2`
                           <ion-select
                             class="tk-psize"
@@ -2294,19 +2319,6 @@ var OkDataTable = class extends i3 {
                             ${this.toolButton("list-outline", this.viewMode === "table", () => this.setViewMode("table"), this.t.viewList)}
                             ${this.toolButton("grid-outline", this.viewMode === "cards", () => this.setViewMode("cards"), this.t.viewCards)}
                           </span>
-                        ` : A}
-                    ${this.effColumnPicker ? b2`
-                          <ion-select
-                            class="tk-cols"
-                            multiple
-                            interface="popover"
-                            aria-label=${this.t.columnsVisible}
-                            .value=${this.visibleColumns.map((c5) => c5.key)}
-                            .selectedText=${this.t.columns}
-                            @ionChange=${(e5) => this.setVisibleColumns(e5.detail.value)}
-                          >
-                            ${this.columns.map((c5) => b2`<ion-select-option value=${c5.key}>${c5.header}</ion-select-option>`)}
-                          </ion-select>
                         ` : A}
                     ${this.hasFilterRow && !this.inlineFilters ? this.toolButton("funnel-outline", this.panel === "filters" || this.activeFilterCount > 0, () => this.toggle("filters"), this.t.filters, this.serverSide ? void 0 : this.activeFilterCount) : A}
                     ${this.effImport ? b2`
@@ -2327,7 +2339,6 @@ var OkDataTable = class extends i3 {
                         ` : A}
                     <!-- El módulo proyecta aquí acciones globales adicionales. -->
                     <slot name="toolbar"></slot>
-                  </div>
                 </div>
                 ${this.selectable && selCount > 0 ? b2`
                       <div class="selbar">
@@ -2564,7 +2575,7 @@ __decorateClass2([
   n4({ type: Boolean, reflect: true })
 ], OkDataTable.prototype, "fill");
 __decorateClass2([
-  n4({ type: Boolean })
+  n4({ type: Boolean, attribute: "column-picker" })
 ], OkDataTable.prototype, "columnPicker");
 __decorateClass2([
   n4({ type: Boolean })
@@ -2603,7 +2614,7 @@ __decorateClass2([
   n4({ type: Boolean })
 ], OkDataTable.prototype, "importable");
 __decorateClass2([
-  n4({ type: Boolean })
+  n4({ type: Boolean, attribute: "column-selector" })
 ], OkDataTable.prototype, "columnSelector");
 __decorateClass2([
   n4({ attribute: false })
@@ -2788,14 +2799,147 @@ function createListController(client, queryName, onChange = () => {
   return new ListController(client, queryName, onChange, opts);
 }
 
-// modules/online_booking/ui/components/erp-online-booking-list/erp-online-booking-list.ts
-var STATUS_LABELS = {
-  pending: "Pendiente",
-  confirmed: "Confirmada",
-  cancelled: "Cancelada",
-  completed: "Completada",
-  no_show: "No-show"
+// ../modules-workspace/modules/online_booking/locales/es.json
+var es_default = {
+  name: "Reservas online",
+  navigation: {
+    bookings: {
+      label: "Reservas"
+    },
+    settings: {
+      label: "Ajustes"
+    }
+  },
+  ui: {
+    title: "Reservas online",
+    colRef: "Ref",
+    colCustomer: "Cliente",
+    colService: "Servicio",
+    colStaff: "Personal",
+    colDate: "Fecha",
+    colTime: "Hora",
+    colStatus: "Estado",
+    statusPending: "Pendiente",
+    statusConfirmed: "Confirmada",
+    statusCancelled: "Cancelada",
+    statusCompleted: "Completada",
+    statusNoShow: "No-show",
+    actionConfirm: "Confirmar",
+    actionComplete: "Completar",
+    actionNoShow: "No-show",
+    actionCancel: "Cancelar",
+    actionDelete: "Borrar",
+    placeholderCustomer: "Cliente",
+    placeholderService: "Servicio",
+    placeholderStaff: "Personal (opcional)",
+    placeholderDuration: "Min.",
+    buttonAdd: "A\xF1adir",
+    buttonSaving: "Guardando\u2026",
+    searchPlaceholder: "Buscar ref, cliente, servicio\u2026",
+    loading: "Cargando\u2026",
+    empty: "Sin reservas.",
+    errorCreate: "No se pudo crear la reserva",
+    errorUpdate: "No se pudo actualizar la reserva",
+    settingsTitle: "Configuraci\xF3n de la p\xE1gina de reservas",
+    settingsSaved: "Configuraci\xF3n guardada.",
+    errorLoadSettings: "Error cargando la configuraci\xF3n",
+    errorSave: "No se pudo guardar",
+    buttonSave: "Guardar",
+    labelPublicEnabled: "P\xE1gina p\xFAblica activada",
+    labelPageTitle: "T\xEDtulo de la p\xE1gina",
+    labelPrimaryColor: "Color primario",
+    labelLogoUrl: "URL del logo",
+    labelMinAdvanceHours: "Antelaci\xF3n m\xEDnima (horas)",
+    labelMaxAdvanceDays: "Antelaci\xF3n m\xE1xima (d\xEDas)",
+    labelSlotDuration: "Duraci\xF3n de slot (min)",
+    labelBuffer: "Buffer entre reservas (min)",
+    labelRequirePhone: "Tel\xE9fono obligatorio",
+    labelRequireEmail: "Email obligatorio",
+    labelAllowStaffSelection: "Permitir elegir personal",
+    labelAllowNotes: "Permitir notas",
+    labelWelcomeMessage: "Mensaje de bienvenida",
+    labelConfirmationMessage: "Mensaje de confirmaci\xF3n",
+    labelCancellationPolicy: "Pol\xEDtica de cancelaci\xF3n"
+  }
 };
+
+// ../modules-workspace/modules/online_booking/locales/en.json
+var en_default = {
+  name: "Online Booking",
+  navigation: {
+    bookings: {
+      label: "Bookings"
+    },
+    settings: {
+      label: "Settings"
+    }
+  },
+  ui: {
+    title: "Online bookings",
+    colRef: "Ref",
+    colCustomer: "Customer",
+    colService: "Service",
+    colStaff: "Staff",
+    colDate: "Date",
+    colTime: "Time",
+    colStatus: "Status",
+    statusPending: "Pending",
+    statusConfirmed: "Confirmed",
+    statusCancelled: "Cancelled",
+    statusCompleted: "Completed",
+    statusNoShow: "No-show",
+    actionConfirm: "Confirm",
+    actionComplete: "Complete",
+    actionNoShow: "No-show",
+    actionCancel: "Cancel",
+    actionDelete: "Delete",
+    placeholderCustomer: "Customer",
+    placeholderService: "Service",
+    placeholderStaff: "Staff (optional)",
+    placeholderDuration: "Min.",
+    buttonAdd: "Add",
+    buttonSaving: "Saving\u2026",
+    searchPlaceholder: "Search ref, customer, service\u2026",
+    loading: "Loading\u2026",
+    empty: "No bookings.",
+    errorCreate: "Could not create the booking",
+    errorUpdate: "Could not update the booking",
+    settingsTitle: "Booking page settings",
+    settingsSaved: "Settings saved.",
+    errorLoadSettings: "Error loading settings",
+    errorSave: "Could not save",
+    buttonSave: "Save",
+    labelPublicEnabled: "Public page enabled",
+    labelPageTitle: "Page title",
+    labelPrimaryColor: "Primary color",
+    labelLogoUrl: "Logo URL",
+    labelMinAdvanceHours: "Minimum advance (hours)",
+    labelMaxAdvanceDays: "Maximum advance (days)",
+    labelSlotDuration: "Slot duration (min)",
+    labelBuffer: "Buffer between bookings (min)",
+    labelRequirePhone: "Phone required",
+    labelRequireEmail: "Email required",
+    labelAllowStaffSelection: "Allow staff selection",
+    labelAllowNotes: "Allow notes",
+    labelWelcomeMessage: "Welcome message",
+    labelConfirmationMessage: "Confirmation message",
+    labelCancellationPolicy: "Cancellation policy"
+  }
+};
+
+// ../modules-workspace/modules/online_booking/ui/components/erp-online-booking-list/erp-online-booking-list.ts
+var CATALOG = { es: es_default, en: en_default };
+function statusLabel(status) {
+  const map = {
+    pending: "ui.statusPending",
+    confirmed: "ui.statusConfirmed",
+    cancelled: "ui.statusCancelled",
+    completed: "ui.statusCompleted",
+    no_show: "ui.statusNoShow"
+  };
+  const key = map[status];
+  return key ? erplora().t(CATALOG, key) : status;
+}
 function erplora() {
   const c5 = globalThis.erplora;
   if (!c5) throw new Error("erplora SDK no inicializado por el shell");
@@ -2813,43 +2957,7 @@ var ErpOnlineBookingList = class extends i3 {
     this.newTime = "";
     this.newStaff = "";
     this.newDuration = "30";
-    this.columns = [
-      { key: "booking_reference", header: "Ref", sortable: true, filterable: true, filterType: "text" },
-      { key: "customer_name", header: "Cliente", sortable: true, filterable: true, filterType: "text" },
-      { key: "service_name", header: "Servicio", sortable: true, filterable: true, filterType: "text" },
-      { key: "staff_name", header: "Personal", sortable: true, filterable: true, filterType: "text" },
-      { key: "booking_date", header: "Fecha", sortable: true, filterable: true, filterType: "daterange" },
-      {
-        key: "booking_time",
-        header: "Hora",
-        sortable: true,
-        filterable: true,
-        filterType: "text",
-        format: (r6) => String(r6.booking_time ?? "").slice(0, 5)
-      },
-      {
-        key: "status",
-        header: "Estado",
-        sortable: true,
-        filterable: true,
-        filterType: "select",
-        options: [
-          { value: "pending", label: "Pendiente" },
-          { value: "confirmed", label: "Confirmada" },
-          { value: "completed", label: "Completada" },
-          { value: "cancelled", label: "Cancelada" },
-          { value: "no_show", label: "No-show" }
-        ],
-        format: (r6) => STATUS_LABELS[r6.status] ?? r6.status
-      }
-    ];
-    this.actions = [
-      { id: "confirm", label: "Confirmar", icon: "checkmark-outline", color: "success" },
-      { id: "complete", label: "Completar", icon: "checkmark-done-outline", color: "primary" },
-      { id: "no_show", label: "No-show", icon: "close-circle-outline", color: "medium" },
-      { id: "cancel", label: "Cancelar", icon: "ban-outline", color: "warning" },
-      { id: "delete", label: "Borrar", icon: "trash-outline", color: "danger" }
-    ];
+    this.onLocaleChange = () => this.requestUpdate();
   }
   static {
     this.styles = i`
@@ -2861,11 +2969,56 @@ var ErpOnlineBookingList = class extends i3 {
     .err { color:#d9480f; font-weight:600; }
   `;
   }
+  // i18n del módulo (ADR-0055): se reconstruye al cambiar de idioma porque es un getter.
+  get columns() {
+    const t5 = (k2) => erplora().t(CATALOG, k2);
+    return [
+      { key: "booking_reference", header: t5("ui.colRef"), sortable: true, filterable: true, filterType: "text" },
+      { key: "customer_name", header: t5("ui.colCustomer"), sortable: true, filterable: true, filterType: "text" },
+      { key: "service_name", header: t5("ui.colService"), sortable: true, filterable: true, filterType: "text" },
+      { key: "staff_name", header: t5("ui.colStaff"), sortable: true, filterable: true, filterType: "text" },
+      { key: "booking_date", header: t5("ui.colDate"), sortable: true, filterable: true, filterType: "daterange" },
+      {
+        key: "booking_time",
+        header: t5("ui.colTime"),
+        sortable: true,
+        filterable: true,
+        filterType: "text",
+        format: (r6) => String(r6.booking_time ?? "").slice(0, 5)
+      },
+      {
+        key: "status",
+        header: t5("ui.colStatus"),
+        sortable: true,
+        filterable: true,
+        filterType: "select",
+        options: [
+          { value: "pending", label: t5("ui.statusPending") },
+          { value: "confirmed", label: t5("ui.statusConfirmed") },
+          { value: "completed", label: t5("ui.statusCompleted") },
+          { value: "cancelled", label: t5("ui.statusCancelled") },
+          { value: "no_show", label: t5("ui.statusNoShow") }
+        ],
+        format: (r6) => statusLabel(r6.status)
+      }
+    ];
+  }
+  get actions() {
+    const t5 = (k2) => erplora().t(CATALOG, k2);
+    return [
+      { id: "confirm", label: t5("ui.actionConfirm"), icon: "checkmark-outline", color: "success" },
+      { id: "complete", label: t5("ui.actionComplete"), icon: "checkmark-done-outline", color: "primary" },
+      { id: "no_show", label: t5("ui.actionNoShow"), icon: "close-circle-outline", color: "medium" },
+      { id: "cancel", label: t5("ui.actionCancel"), icon: "ban-outline", color: "warning" },
+      { id: "delete", label: t5("ui.actionDelete"), icon: "trash-outline", color: "danger" }
+    ];
+  }
   // TODO-LIT: componentWillLoad → connectedCallback. Recuerda: connectedCallback se dispara
   // en CADA reconexión al DOM (no solo en el primer montaje). Si la init debe correr una
   // sola vez tras el primer render, considera firstUpdated() en su lugar.
   async connectedCallback() {
     super.connectedCallback();
+    window.addEventListener("erplora:locale-changed", this.onLocaleChange);
     this.ctrl = createListController(erplora(), "online_booking.bookings.list", () => this.requestUpdate(), {
       pageSize: 50,
       sort: "id",
@@ -2886,6 +3039,7 @@ var ErpOnlineBookingList = class extends i3 {
     }
   }
   disconnectedCallback() {
+    window.removeEventListener("erplora:locale-changed", this.onLocaleChange);
     super.disconnectedCallback();
     this.unsub?.();
   }
@@ -2913,7 +3067,7 @@ var ErpOnlineBookingList = class extends i3 {
       this.newDuration = "30";
       await this.ctrl.load();
     } catch (e5) {
-      this.formError = e5 instanceof Error ? e5.message : "No se pudo crear la reserva";
+      this.formError = e5 instanceof Error ? e5.message : erplora().t(CATALOG, "ui.errorCreate");
     } finally {
       this.saving = false;
     }
@@ -2936,26 +3090,27 @@ var ErpOnlineBookingList = class extends i3 {
       }
       await this.ctrl.load();
     } catch (e5) {
-      this.formError = e5 instanceof Error ? e5.message : "No se pudo actualizar la reserva";
+      this.formError = e5 instanceof Error ? e5.message : erplora().t(CATALOG, "ui.errorUpdate");
     }
   }
   render() {
+    const t5 = (k2) => erplora().t(CATALOG, k2);
     return b2`<div>
         <header>
-          <h2>Reservas online</h2>
+          <h2>${t5("ui.title")}</h2>
         </header>
         <form class="form" @submit=${(e5) => this.createBooking(e5)}>
-          <ion-input placeholder="Cliente" .value=${this.newCustomer} @ionInput=${(e5) => this.newCustomer = e5.target.value}></ion-input>
-          <ion-input placeholder="Servicio" .value=${this.newService} @ionInput=${(e5) => this.newService = e5.target.value}></ion-input>
-          <ion-input placeholder="Personal (opcional)" .value=${this.newStaff} @ionInput=${(e5) => this.newStaff = e5.target.value}></ion-input>
+          <ion-input placeholder=${t5("ui.placeholderCustomer")} .value=${this.newCustomer} @ionInput=${(e5) => this.newCustomer = e5.target.value}></ion-input>
+          <ion-input placeholder=${t5("ui.placeholderService")} .value=${this.newService} @ionInput=${(e5) => this.newService = e5.target.value}></ion-input>
+          <ion-input placeholder=${t5("ui.placeholderStaff")} .value=${this.newStaff} @ionInput=${(e5) => this.newStaff = e5.target.value}></ion-input>
           <ion-input type="date" .value=${this.newDate} @ionInput=${(e5) => this.newDate = e5.target.value}></ion-input>
           <ion-input type="time" .value=${this.newTime} @ionInput=${(e5) => this.newTime = e5.target.value}></ion-input>
-          <ion-input type="number" min="5" step="5" placeholder="Min." .value=${this.newDuration} @ionInput=${(e5) => this.newDuration = e5.target.value}></ion-input>
-          <ion-button type="submit" size="small" ?disabled=${this.saving || !this.newCustomer || !this.newService || !this.newDate || !this.newTime}>${this.saving ? "Guardando\u2026" : "A\xF1adir"}</ion-button>
+          <ion-input type="number" min="5" step="5" placeholder=${t5("ui.placeholderDuration")} .value=${this.newDuration} @ionInput=${(e5) => this.newDuration = e5.target.value}></ion-input>
+          <ion-button type="submit" size="small" ?disabled=${this.saving || !this.newCustomer || !this.newService || !this.newDate || !this.newTime}>${this.saving ? t5("ui.buttonSaving") : t5("ui.buttonAdd")}</ion-button>
         </form>
         ${this.formError ? b2`<p class="err">${this.formError}</p>` : A}
         ${this.ctrl?.error ? b2`<p class="err">${this.ctrl.error}</p>` : A}
-        <ok-data-table .serverSide=${true} .columns=${this.columns} .rows=${this.ctrl?.rows ?? []} .total=${this.ctrl?.total ?? 0} .page=${this.ctrl?.state.page ?? 0} .pageSize=${this.ctrl?.state.pageSize ?? 50} .sort=${this.ctrl?.state.sort} .sortDir=${this.ctrl?.state.dir ?? "asc"} .searchable=${true} .actions=${this.actions} .searchPlaceholder=${"Buscar ref, cliente, servicio\u2026"} .emptyMessage=${this.ctrl?.loading ? "Cargando\u2026" : "Sin reservas."} @rowAction=${(e5) => this.onRowAction(e5)} @pageChange=${(e5) => this.ctrl.setPage(e5.detail)} @sortChange=${(e5) => this.ctrl.setSort(e5.detail.sort, e5.detail.dir)} @searchChange=${(e5) => this.ctrl.setSearch(e5.detail)} @filterChange=${(e5) => this.ctrl.setFilter(e5.detail.col, e5.detail.value)}></ok-data-table>
+        <ok-data-table .serverSide=${true} .columns=${this.columns} .rows=${this.ctrl?.rows ?? []} .total=${this.ctrl?.total ?? 0} .page=${this.ctrl?.state.page ?? 0} .pageSize=${this.ctrl?.state.pageSize ?? 50} .sort=${this.ctrl?.state.sort} .sortDir=${this.ctrl?.state.dir ?? "asc"} .searchable=${true} .actions=${this.actions} .searchPlaceholder=${t5("ui.searchPlaceholder")} .emptyMessage=${this.ctrl?.loading ? t5("ui.loading") : t5("ui.empty")} @rowAction=${(e5) => this.onRowAction(e5)} @pageChange=${(e5) => this.ctrl.setPage(e5.detail)} @sortChange=${(e5) => this.ctrl.setSort(e5.detail.sort, e5.detail.dir)} @searchChange=${(e5) => this.ctrl.setSearch(e5.detail)} @filterChange=${(e5) => this.ctrl.setFilter(e5.detail.col, e5.detail.value)}></ok-data-table>
       </div>`;
   }
 };
@@ -2988,7 +3143,8 @@ __decorateClass([
 ], ErpOnlineBookingList.prototype, "newDuration", 2);
 define("erp-online-booking-list", ErpOnlineBookingList);
 
-// modules/online_booking/ui/components/erp-online-booking-settings/erp-online-booking-settings.ts
+// ../modules-workspace/modules/online_booking/ui/components/erp-online-booking-settings/erp-online-booking-settings.ts
+var CATALOG2 = { es: es_default, en: en_default };
 var DEFAULTS = {
   is_enabled: 0,
   page_title: "Book an Appointment",
@@ -3019,6 +3175,7 @@ var ErpOnlineBookingSettings = class extends i3 {
     this.saving = false;
     this.error = "";
     this.saved = false;
+    this.onLocaleChange = () => this.requestUpdate();
   }
   static {
     this.styles = i`
@@ -3039,7 +3196,12 @@ var ErpOnlineBookingSettings = class extends i3 {
   // sola vez tras el primer render, considera firstUpdated() en su lugar.
   async connectedCallback() {
     super.connectedCallback();
+    window.addEventListener("erplora:locale-changed", this.onLocaleChange);
     await this.refresh();
+  }
+  disconnectedCallback() {
+    window.removeEventListener("erplora:locale-changed", this.onLocaleChange);
+    super.disconnectedCallback();
   }
   async refresh() {
     this.loading = true;
@@ -3049,7 +3211,7 @@ var ErpOnlineBookingSettings = class extends i3 {
       const row = Array.isArray(rows) ? rows[0] : rows;
       this.s = row ? { ...DEFAULTS, ...row } : { ...DEFAULTS };
     } catch (e5) {
-      this.error = e5 instanceof Error ? e5.message : "Error cargando la configuraci\xF3n";
+      this.error = e5 instanceof Error ? e5.message : erplora2().t(CATALOG2, "ui.errorLoadSettings");
     } finally {
       this.loading = false;
     }
@@ -3084,84 +3246,85 @@ var ErpOnlineBookingSettings = class extends i3 {
       this.saved = true;
       await this.refresh();
     } catch (e5) {
-      this.error = e5 instanceof Error ? e5.message : "No se pudo guardar";
+      this.error = e5 instanceof Error ? e5.message : erplora2().t(CATALOG2, "ui.errorSave");
     } finally {
       this.saving = false;
     }
   }
   render() {
+    const t5 = (k2) => erplora2().t(CATALOG2, k2);
     return b2`<form @submit=${(e5) => this.save(e5)}>
         <header>
-          <h2>Configuración de la página de reservas</h2>
+          <h2>${t5("ui.settingsTitle")}</h2>
         </header>
         ${this.error ? b2`<p class="err">${this.error}</p>` : A}
-        ${this.saved ? b2`<p class="ok">Configuración guardada.</p>` : A}
+        ${this.saved ? b2`<p class="ok">${t5("ui.settingsSaved")}</p>` : A}
         <div class="row" style="margin-bottom:1rem">
           <ion-toggle ?checked=${!!this.s.is_enabled} @ionChange=${(e5) => this.set("is_enabled", e5.target.checked ? 1 : 0)}></ion-toggle>
-          <label>Página pública activada</label>
+          <label>${t5("ui.labelPublicEnabled")}</label>
         </div>
         <div class="grid">
           <div class="field">
-            <label>Título de la página</label>
+            <label>${t5("ui.labelPageTitle")}</label>
             <ion-input .value=${this.s.page_title} @ionInput=${(e5) => this.set("page_title", e5.target.value)}></ion-input>
           </div>
           <div class="field">
-            <label>Color primario</label>
+            <label>${t5("ui.labelPrimaryColor")}</label>
             <ion-input .value=${this.s.primary_color} @ionInput=${(e5) => this.set("primary_color", e5.target.value)}></ion-input>
           </div>
           <div class="field">
-            <label>URL del logo</label>
+            <label>${t5("ui.labelLogoUrl")}</label>
             <ion-input .value=${this.s.logo_url} @ionInput=${(e5) => this.set("logo_url", e5.target.value)}></ion-input>
           </div>
           <div class="field">
-            <label>Antelación mínima (horas)</label>
+            <label>${t5("ui.labelMinAdvanceHours")}</label>
             <ion-input type="number" min="0" max="168" .value=${String(this.s.min_advance_hours)} @ionInput=${(e5) => this.set("min_advance_hours", Number(e5.target.value))}></ion-input>
           </div>
           <div class="field">
-            <label>Antelación máxima (días)</label>
+            <label>${t5("ui.labelMaxAdvanceDays")}</label>
             <ion-input type="number" min="1" max="365" .value=${String(this.s.max_advance_days)} @ionInput=${(e5) => this.set("max_advance_days", Number(e5.target.value))}></ion-input>
           </div>
           <div class="field">
-            <label>Duración de slot (min)</label>
+            <label>${t5("ui.labelSlotDuration")}</label>
             <ion-input type="number" min="5" max="480" .value=${String(this.s.slot_duration_minutes)} @ionInput=${(e5) => this.set("slot_duration_minutes", Number(e5.target.value))}></ion-input>
           </div>
           <div class="field">
-            <label>Buffer entre reservas (min)</label>
+            <label>${t5("ui.labelBuffer")}</label>
             <ion-input type="number" min="0" max="120" .value=${String(this.s.buffer_minutes)} @ionInput=${(e5) => this.set("buffer_minutes", Number(e5.target.value))}></ion-input>
           </div>
         </div>
         <div class="grid">
           <div class="row">
             <ion-toggle ?checked=${!!this.s.require_phone} @ionChange=${(e5) => this.set("require_phone", e5.target.checked ? 1 : 0)}></ion-toggle>
-            <label>Teléfono obligatorio</label>
+            <label>${t5("ui.labelRequirePhone")}</label>
           </div>
           <div class="row">
             <ion-toggle ?checked=${!!this.s.require_email} @ionChange=${(e5) => this.set("require_email", e5.target.checked ? 1 : 0)}></ion-toggle>
-            <label>Email obligatorio</label>
+            <label>${t5("ui.labelRequireEmail")}</label>
           </div>
           <div class="row">
             <ion-toggle ?checked=${!!this.s.allow_staff_selection} @ionChange=${(e5) => this.set("allow_staff_selection", e5.target.checked ? 1 : 0)}></ion-toggle>
-            <label>Permitir elegir personal</label>
+            <label>${t5("ui.labelAllowStaffSelection")}</label>
           </div>
           <div class="row">
             <ion-toggle ?checked=${!!this.s.allow_notes} @ionChange=${(e5) => this.set("allow_notes", e5.target.checked ? 1 : 0)}></ion-toggle>
-            <label>Permitir notas</label>
+            <label>${t5("ui.labelAllowNotes")}</label>
           </div>
         </div>
         <div class="field">
-          <label>Mensaje de bienvenida</label>
+          <label>${t5("ui.labelWelcomeMessage")}</label>
           <ion-textarea .value=${this.s.welcome_message} @ionInput=${(e5) => this.set("welcome_message", e5.target.value)}></ion-textarea>
         </div>
         <div class="field">
-          <label>Mensaje de confirmación</label>
+          <label>${t5("ui.labelConfirmationMessage")}</label>
           <ion-textarea .value=${this.s.confirmation_message} @ionInput=${(e5) => this.set("confirmation_message", e5.target.value)}></ion-textarea>
         </div>
         <div class="field">
-          <label>Política de cancelación</label>
+          <label>${t5("ui.labelCancellationPolicy")}</label>
           <ion-textarea .value=${this.s.cancellation_policy} @ionInput=${(e5) => this.set("cancellation_policy", e5.target.value)}></ion-textarea>
         </div>
         <div class="actions">
-          <ion-button type="submit" ?disabled=${this.saving || this.loading}>${this.saving ? "Guardando\u2026" : "Guardar"}</ion-button>
+          <ion-button type="submit" ?disabled=${this.saving || this.loading}>${this.saving ? t5("ui.buttonSaving") : t5("ui.buttonSave")}</ion-button>
         </div>
       </form>`;
   }

@@ -5,12 +5,20 @@ import '@erplora/outfitkit/ok-data-table';
 import type { DataTableColumn } from '@erplora/outfitkit';
 import { createListController } from '@erplora/module-sdk';
 import type { ListController, ListClient, ListParams, ListPage } from '@erplora/module-sdk';
+// Catálogo i18n del módulo (ADR-0055): esbuild inlinea estos JSON en el `dist` del WC. Los textos
+// internos se resuelven con `erplora.t(CATALOG, 'ui.clave')` (idioma activo, fallback locale→en→clave).
+import esLocale from '../../../locales/es.json';
+import enLocale from '../../../locales/en.json';
+const CATALOG: Record<string, unknown> = { es: esLocale, en: enLocale };
 
 interface ErploraClientLike extends ListClient {
   query<T = unknown>(name: string, params?: Record<string, unknown>): Promise<T>;
   queryPage<R = unknown>(name: string, params: ListParams): Promise<ListPage<R>>;
   command<T = unknown>(name: string, payload?: Record<string, unknown>): Promise<T>;
   on(event: string, cb: (payload: unknown) => void): () => void;
+  /** i18n del módulo (ADR-0055): idioma activo + traducción del catálogo `ui`. */
+  locale: string;
+  t(catalog: Record<string, unknown>, key: string, params?: Record<string, unknown>): string;
 }
 
 interface Booking {
@@ -29,13 +37,17 @@ interface Booking {
   notes: string;
 }
 
-const STATUS_LABELS: Record<string, string> = {
-  pending: 'Pendiente',
-  confirmed: 'Confirmada',
-  cancelled: 'Cancelada',
-  completed: 'Completada',
-  no_show: 'No-show',
-};
+function statusLabel(status: string): string {
+  const map: Record<string, string> = {
+    pending: 'ui.statusPending',
+    confirmed: 'ui.statusConfirmed',
+    cancelled: 'ui.statusCancelled',
+    completed: 'ui.statusCompleted',
+    no_show: 'ui.statusNoShow',
+  };
+  const key = map[status];
+  return key ? erplora().t(CATALOG, key) : status;
+}
 
 function erplora(): ErploraClientLike {
   const c = (globalThis as { erplora?: ErploraClientLike }).erplora;
@@ -75,50 +87,60 @@ export class ErpOnlineBookingList extends LitElement {
 
   private unsub?: () => void;
 
-  private columns: DataTableColumn[] = [
-    { key: 'booking_reference', header: 'Ref', sortable: true, filterable: true, filterType: 'text' },
-    { key: 'customer_name', header: 'Cliente', sortable: true, filterable: true, filterType: 'text' },
-    { key: 'service_name', header: 'Servicio', sortable: true, filterable: true, filterType: 'text' },
-    { key: 'staff_name', header: 'Personal', sortable: true, filterable: true, filterType: 'text' },
-    { key: 'booking_date', header: 'Fecha', sortable: true, filterable: true, filterType: 'daterange' },
-    {
-      key: 'booking_time',
-      header: 'Hora',
-      sortable: true,
-      filterable: true,
-      filterType: 'text',
-      format: (r) => String(r.booking_time ?? '').slice(0, 5),
-    },
-    {
-      key: 'status',
-      header: 'Estado',
-      sortable: true,
-      filterable: true,
-      filterType: 'select',
-      options: [
-        { value: 'pending', label: 'Pendiente' },
-        { value: 'confirmed', label: 'Confirmada' },
-        { value: 'completed', label: 'Completada' },
-        { value: 'cancelled', label: 'Cancelada' },
-        { value: 'no_show', label: 'No-show' },
-      ],
-      format: (r) => STATUS_LABELS[r.status as string] ?? (r.status as string),
-    },
-  ];
+  // i18n del módulo (ADR-0055): se reconstruye al cambiar de idioma porque es un getter.
+  private get columns(): DataTableColumn[] {
+    const t = (k: string) => erplora().t(CATALOG, k);
+    return [
+      { key: 'booking_reference', header: t('ui.colRef'), sortable: true, filterable: true, filterType: 'text' },
+      { key: 'customer_name', header: t('ui.colCustomer'), sortable: true, filterable: true, filterType: 'text' },
+      { key: 'service_name', header: t('ui.colService'), sortable: true, filterable: true, filterType: 'text' },
+      { key: 'staff_name', header: t('ui.colStaff'), sortable: true, filterable: true, filterType: 'text' },
+      { key: 'booking_date', header: t('ui.colDate'), sortable: true, filterable: true, filterType: 'daterange' },
+      {
+        key: 'booking_time',
+        header: t('ui.colTime'),
+        sortable: true,
+        filterable: true,
+        filterType: 'text',
+        format: (r) => String(r.booking_time ?? '').slice(0, 5),
+      },
+      {
+        key: 'status',
+        header: t('ui.colStatus'),
+        sortable: true,
+        filterable: true,
+        filterType: 'select',
+        options: [
+          { value: 'pending', label: t('ui.statusPending') },
+          { value: 'confirmed', label: t('ui.statusConfirmed') },
+          { value: 'completed', label: t('ui.statusCompleted') },
+          { value: 'cancelled', label: t('ui.statusCancelled') },
+          { value: 'no_show', label: t('ui.statusNoShow') },
+        ],
+        format: (r) => statusLabel(r.status as string),
+      },
+    ];
+  }
 
-  private actions = [
-    { id: 'confirm', label: 'Confirmar', icon: 'checkmark-outline', color: 'success' },
-    { id: 'complete', label: 'Completar', icon: 'checkmark-done-outline', color: 'primary' },
-    { id: 'no_show', label: 'No-show', icon: 'close-circle-outline', color: 'medium' },
-    { id: 'cancel', label: 'Cancelar', icon: 'ban-outline', color: 'warning' },
-    { id: 'delete', label: 'Borrar', icon: 'trash-outline', color: 'danger' },
-  ];
+  private get actions() {
+    const t = (k: string) => erplora().t(CATALOG, k);
+    return [
+      { id: 'confirm', label: t('ui.actionConfirm'), icon: 'checkmark-outline', color: 'success' },
+      { id: 'complete', label: t('ui.actionComplete'), icon: 'checkmark-done-outline', color: 'primary' },
+      { id: 'no_show', label: t('ui.actionNoShow'), icon: 'close-circle-outline', color: 'medium' },
+      { id: 'cancel', label: t('ui.actionCancel'), icon: 'ban-outline', color: 'warning' },
+      { id: 'delete', label: t('ui.actionDelete'), icon: 'trash-outline', color: 'danger' },
+    ];
+  }
+
+  private readonly onLocaleChange = (): void => this.requestUpdate();
 
   // TODO-LIT: componentWillLoad → connectedCallback. Recuerda: connectedCallback se dispara
   // en CADA reconexión al DOM (no solo en el primer montaje). Si la init debe correr una
   // sola vez tras el primer render, considera firstUpdated() en su lugar.
   async connectedCallback() {
     super.connectedCallback();
+    window.addEventListener('erplora:locale-changed', this.onLocaleChange);
     this.ctrl = createListController<Booking>(erplora(), 'online_booking.bookings.list', () => this.requestUpdate(), {
       pageSize: 50,
       sort: 'id',
@@ -141,6 +163,7 @@ export class ErpOnlineBookingList extends LitElement {
   }
 
   disconnectedCallback() {
+    window.removeEventListener('erplora:locale-changed', this.onLocaleChange);
     super.disconnectedCallback();
     this.unsub?.();
   }
@@ -169,7 +192,7 @@ export class ErpOnlineBookingList extends LitElement {
       this.newDuration = '30';
       await this.ctrl.load();
     } catch (e) {
-      this.formError = e instanceof Error ? e.message : 'No se pudo crear la reserva';
+      this.formError = e instanceof Error ? e.message : erplora().t(CATALOG, 'ui.errorCreate');
     } finally {
       this.saving = false;
     }
@@ -193,27 +216,28 @@ export class ErpOnlineBookingList extends LitElement {
       }
       await this.ctrl.load();
     } catch (e) {
-      this.formError = e instanceof Error ? e.message : 'No se pudo actualizar la reserva';
+      this.formError = e instanceof Error ? e.message : erplora().t(CATALOG, 'ui.errorUpdate');
     }
   }
 
   render() {
+    const t = (k: string) => erplora().t(CATALOG, k);
     return html`<div>
         <header>
-          <h2>Reservas online</h2>
+          <h2>${t('ui.title')}</h2>
         </header>
         <form class="form" @submit=${(e) => this.createBooking(e)}>
-          <ion-input placeholder="Cliente" .value=${this.newCustomer} @ionInput=${(e: any) => (this.newCustomer = e.target.value)}></ion-input>
-          <ion-input placeholder="Servicio" .value=${this.newService} @ionInput=${(e: any) => (this.newService = e.target.value)}></ion-input>
-          <ion-input placeholder="Personal (opcional)" .value=${this.newStaff} @ionInput=${(e: any) => (this.newStaff = e.target.value)}></ion-input>
+          <ion-input placeholder=${t('ui.placeholderCustomer')} .value=${this.newCustomer} @ionInput=${(e: any) => (this.newCustomer = e.target.value)}></ion-input>
+          <ion-input placeholder=${t('ui.placeholderService')} .value=${this.newService} @ionInput=${(e: any) => (this.newService = e.target.value)}></ion-input>
+          <ion-input placeholder=${t('ui.placeholderStaff')} .value=${this.newStaff} @ionInput=${(e: any) => (this.newStaff = e.target.value)}></ion-input>
           <ion-input type="date" .value=${this.newDate} @ionInput=${(e: any) => (this.newDate = e.target.value)}></ion-input>
           <ion-input type="time" .value=${this.newTime} @ionInput=${(e: any) => (this.newTime = e.target.value)}></ion-input>
-          <ion-input type="number" min="5" step="5" placeholder="Min." .value=${this.newDuration} @ionInput=${(e: any) => (this.newDuration = e.target.value)}></ion-input>
-          <ion-button type="submit" size="small" ?disabled=${this.saving || !this.newCustomer || !this.newService || !this.newDate || !this.newTime}>${this.saving ? 'Guardando…' : 'Añadir'}</ion-button>
+          <ion-input type="number" min="5" step="5" placeholder=${t('ui.placeholderDuration')} .value=${this.newDuration} @ionInput=${(e: any) => (this.newDuration = e.target.value)}></ion-input>
+          <ion-button type="submit" size="small" ?disabled=${this.saving || !this.newCustomer || !this.newService || !this.newDate || !this.newTime}>${this.saving ? t('ui.buttonSaving') : t('ui.buttonAdd')}</ion-button>
         </form>
         ${this.formError ? html`<p class="err">${this.formError}</p>` : nothing}
         ${this.ctrl?.error ? html`<p class="err">${this.ctrl.error}</p>` : nothing}
-        <ok-data-table .serverSide=${true} .columns=${this.columns} .rows=${this.ctrl?.rows ?? []} .total=${this.ctrl?.total ?? 0} .page=${this.ctrl?.state.page ?? 0} .pageSize=${this.ctrl?.state.pageSize ?? 50} .sort=${this.ctrl?.state.sort} .sortDir=${this.ctrl?.state.dir ?? 'asc'} .searchable=${true} .actions=${this.actions} .searchPlaceholder=${"Buscar ref, cliente, servicio…"} .emptyMessage=${this.ctrl?.loading ? 'Cargando…' : 'Sin reservas.'} @rowAction=${(e: CustomEvent) => this.onRowAction(e)} @pageChange=${(e: CustomEvent<number>) => this.ctrl.setPage(e.detail)} @sortChange=${(e: CustomEvent<{ sort: string; dir: 'asc' | 'desc' }>) => this.ctrl.setSort(e.detail.sort, e.detail.dir)} @searchChange=${(e: CustomEvent<string>) => this.ctrl.setSearch(e.detail)} @filterChange=${(e: CustomEvent<{ col: string; value: unknown }>) => this.ctrl.setFilter(e.detail.col, e.detail.value)}></ok-data-table>
+        <ok-data-table .serverSide=${true} .columns=${this.columns} .rows=${this.ctrl?.rows ?? []} .total=${this.ctrl?.total ?? 0} .page=${this.ctrl?.state.page ?? 0} .pageSize=${this.ctrl?.state.pageSize ?? 50} .sort=${this.ctrl?.state.sort} .sortDir=${this.ctrl?.state.dir ?? 'asc'} .searchable=${true} .actions=${this.actions} .searchPlaceholder=${t('ui.searchPlaceholder')} .emptyMessage=${this.ctrl?.loading ? t('ui.loading') : t('ui.empty')} @rowAction=${(e: CustomEvent) => this.onRowAction(e)} @pageChange=${(e: CustomEvent<number>) => this.ctrl.setPage(e.detail)} @sortChange=${(e: CustomEvent<{ sort: string; dir: 'asc' | 'desc' }>) => this.ctrl.setSort(e.detail.sort, e.detail.dir)} @searchChange=${(e: CustomEvent<string>) => this.ctrl.setSearch(e.detail)} @filterChange=${(e: CustomEvent<{ col: string; value: unknown }>) => this.ctrl.setFilter(e.detail.col, e.detail.value)}></ok-data-table>
       </div>`;
   }
 }
