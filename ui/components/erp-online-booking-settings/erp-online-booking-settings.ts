@@ -59,12 +59,12 @@ function erplora(): ErploraClientLike {
 
 export class ErpOnlineBookingSettings extends LitElement {
   static styles = css`
-    :host { display:block; font-family: system-ui, sans-serif; color: var(--ink, #1c1b18); }
+    :host { display:block; font-family: system-ui, sans-serif; color: var(--ion-text-color, #1c1b18); }
     header { display:flex; gap:.5rem; align-items:center; margin-bottom:.75rem; }
     h2 { margin:0; font-size:1.15rem; flex:1; }
     .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(14rem,1fr)); gap:.75rem; margin-bottom:1rem; }
     .field { display:flex; flex-direction:column; gap:.25rem; }
-    label { font-size:.85rem; color: var(--muted,#6b6557); }
+    label { font-size:.85rem; color: var(--ion-color-medium,#6b6557); }
     .row { display:flex; align-items:center; gap:.5rem; }
     .err { color:#d9480f; font-weight:600; }
     .ok { color:#2b8a3e; font-weight:600; }
