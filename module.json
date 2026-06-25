@@ -130,14 +130,16 @@
       },
       "ai": {
         "description": "Lists all online bookings in the hub."
-      }
+      },
+      "expose_api": true
     },
     "online_booking.bookings.get": {
       "permission": "online_booking.view_booking",
       "sql": "queries/booking_get.sql",
       "ai": {
         "description": "Retrieves the details of an online booking by its ID."
-      }
+      },
+      "expose_api": true
     },
     "online_booking.settings.get": {
       "permission": "online_booking.view_booking",
@@ -161,7 +163,8 @@
       ],
       "ai": {
         "description": "Creates a new online booking for a customer."
-      }
+      },
+      "expose_api": true
     },
     "online_booking.bookings.confirm": {
       "permission": "online_booking.confirm_booking",
