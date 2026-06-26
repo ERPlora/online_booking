@@ -9,7 +9,7 @@ var __decorateClass = (decorators, target, key, kind) => {
   return result;
 };
 
-// node_modules/.pnpm/@lit-labs+ssr-dom-shim@1.6.0/node_modules/@lit-labs/ssr-dom-shim/lib/element-internals.js
+// node_modules/@lit-labs/ssr-dom-shim/lib/element-internals.js
 var ElementInternalsShim = class ElementInternals {
   get shadowRoot() {
     return this.__host.__shadowRoot;
@@ -88,7 +88,7 @@ var ElementInternalsShim = class ElementInternals {
   }
 };
 
-// node_modules/.pnpm/@lit-labs+ssr-dom-shim@1.6.0/node_modules/@lit-labs/ssr-dom-shim/lib/events.js
+// node_modules/@lit-labs/ssr-dom-shim/lib/events.js
 var __classPrivateFieldSet = function(receiver, state, value, kind, f3) {
   if (kind === "m") throw new TypeError("Private method is not writable");
   if (kind === "a" && !f3) throw new TypeError("Private accessor was defined without a setter");
@@ -246,7 +246,7 @@ Object.defineProperties(CustomEventShim.prototype, {
 var EventShimWithRealType = EventShim;
 var CustomEventShimWithRealType = CustomEventShim;
 
-// node_modules/.pnpm/@lit-labs+ssr-dom-shim@1.6.0/node_modules/@lit-labs/ssr-dom-shim/lib/css.js
+// node_modules/@lit-labs/ssr-dom-shim/lib/css.js
 var _a2;
 var CSSRuleShim = (_a2 = class CSSRule {
   constructor() {
@@ -277,7 +277,7 @@ var CSSRuleShim = (_a2 = class CSSRule {
   }
 }, _a2.STYLE_RULE = 1, _a2.CHARSET_RULE = 2, _a2.IMPORT_RULE = 3, _a2.MEDIA_RULE = 4, _a2.FONT_FACE_RULE = 5, _a2.PAGE_RULE = 6, _a2.NAMESPACE_RULE = 10, _a2.KEYFRAMES_RULE = 7, _a2.KEYFRAME_RULE = 8, _a2.SUPPORTS_RULE = 12, _a2.COUNTER_STYLE_RULE = 11, _a2.FONT_FEATURE_VALUES_RULE = 14, _a2.MARGIN_RULE = 9, _a2);
 
-// node_modules/.pnpm/@lit-labs+ssr-dom-shim@1.6.0/node_modules/@lit-labs/ssr-dom-shim/index.js
+// node_modules/@lit-labs/ssr-dom-shim/index.js
 globalThis.Event ??= EventShimWithRealType;
 globalThis.CustomEvent ??= CustomEventShimWithRealType;
 var constructionToken = Symbol();
@@ -674,7 +674,7 @@ var CustomElementRegistryShimWithRealType = CustomElementRegistry;
 var customElements2 = new CustomElementRegistryShimWithRealType();
 var windowShim = new WindowShim(constructionToken);
 
-// node_modules/.pnpm/@lit+reactive-element@2.1.2/node_modules/@lit/reactive-element/node/css-tag.js
+// node_modules/@lit/reactive-element/node/css-tag.js
 var t = globalThis;
 var e = t.ShadowRoot && (void 0 === t.ShadyCSS || t.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype;
 var s = Symbol();
@@ -719,7 +719,7 @@ var c = e || void 0 === t.CSSStyleSheet ? (t5) => t5 : (t5) => t5 instanceof CSS
   return r(e5);
 })(t5) : t5;
 
-// node_modules/.pnpm/@lit+reactive-element@2.1.2/node_modules/@lit/reactive-element/node/reactive-element.js
+// node_modules/@lit/reactive-element/node/reactive-element.js
 var { is: h, defineProperty: r2, getOwnPropertyDescriptor: o2, getOwnPropertyNames: n2, getOwnPropertySymbols: a, getPrototypeOf: c2 } = Object;
 var l = globalThis;
 l.customElements ??= customElements2;
@@ -942,7 +942,7 @@ var g = class extends (globalThis.HTMLElement ?? HTMLElementShimWithRealType) {
 };
 g.elementStyles = [], g.shadowRootOptions = { mode: "open" }, g[f("elementProperties")] = /* @__PURE__ */ new Map(), g[f("finalized")] = /* @__PURE__ */ new Map(), u?.({ ReactiveElement: g }), (l.reactiveElementVersions ??= []).push("2.1.2");
 
-// node_modules/.pnpm/lit-html@3.3.3/node_modules/lit-html/lit-html.js
+// node_modules/lit-html/lit-html.js
 var t2 = globalThis;
 var i2 = (t5) => t5;
 var s2 = t2.trustedTypes;
@@ -1197,7 +1197,7 @@ var D = (t5, i7, s5) => {
   return h4._$AI(t5), h4;
 };
 
-// node_modules/.pnpm/lit-element@4.2.2/node_modules/lit-element/lit-element.js
+// node_modules/lit-element/lit-element.js
 var s3 = globalThis;
 var i3 = class extends g {
   constructor() {
@@ -1226,7 +1226,7 @@ var o4 = s3.litElementPolyfillSupport;
 o4?.({ LitElement: i3 });
 (s3.litElementVersions ??= []).push("4.2.2");
 
-// node_modules/.pnpm/@lit+reactive-element@2.1.2/node_modules/@lit/reactive-element/node/decorators/property.js
+// node_modules/@lit/reactive-element/node/decorators/property.js
 var o5 = { attribute: true, type: String, converter: b, reflect: false, hasChanged: m };
 var r4 = (t5 = o5, e5, r6) => {
   const { kind: n6, metadata: i7 } = r6;
@@ -1256,19 +1256,19 @@ function n4(t5) {
   })(t5, e5, o7);
 }
 
-// node_modules/.pnpm/@lit+reactive-element@2.1.2/node_modules/@lit/reactive-element/node/decorators/state.js
+// node_modules/@lit/reactive-element/node/decorators/state.js
 function r5(r6) {
   return n4({ ...r6, state: true, attribute: false });
 }
 
-// node_modules/.pnpm/@outfitkit+core@file+..+outfitkit/node_modules/@outfitkit/core/dist/define.js
+// ../outfitkit/dist/define.js
 function define(tag, ctor) {
   if (typeof customElements !== "undefined" && !customElements.get(tag)) {
     customElements.define(tag, ctor);
   }
 }
 
-// node_modules/.pnpm/lit-html@3.3.3/node_modules/lit-html/directive.js
+// node_modules/lit-html/directive.js
 var t3 = { ATTRIBUTE: 1, CHILD: 2, PROPERTY: 3, BOOLEAN_ATTRIBUTE: 4, EVENT: 5, ELEMENT: 6 };
 var e4 = (t5) => (...e5) => ({ _$litDirective$: t5, values: e5 });
 var i4 = class {
@@ -1288,7 +1288,7 @@ var i4 = class {
   }
 };
 
-// node_modules/.pnpm/lit-html@3.3.3/node_modules/lit-html/directive-helpers.js
+// node_modules/lit-html/directive-helpers.js
 var { I: t4 } = j;
 var i5 = (o7) => o7;
 var s4 = () => document.createComment("");
@@ -1321,7 +1321,7 @@ var h3 = (o7) => {
   o7._$AR(), o7._$AA.remove();
 };
 
-// node_modules/.pnpm/lit-html@3.3.3/node_modules/lit-html/directives/repeat.js
+// node_modules/lit-html/directives/repeat.js
 var u4 = (e5, s5, t5) => {
   const r6 = /* @__PURE__ */ new Map();
   for (let l3 = s5; l3 <= t5; l3++) r6.set(e5[l3], l3);
@@ -1374,7 +1374,7 @@ var c4 = e4(class extends i4 {
   }
 });
 
-// node_modules/.pnpm/lit-html@3.3.3/node_modules/lit-html/directives/style-map.js
+// node_modules/lit-html/directives/style-map.js
 var n5 = "important";
 var i6 = " !" + n5;
 var o6 = e4(class extends i4 {
@@ -1403,7 +1403,7 @@ var o6 = e4(class extends i4 {
   }
 });
 
-// node_modules/.pnpm/@outfitkit+core@file+..+outfitkit/node_modules/@outfitkit/core/dist/ok-data-table.js
+// ../outfitkit/dist/ok-data-table.js
 var __defProp2 = Object.defineProperty;
 var __decorateClass2 = (decorators, target, key, kind) => {
   var result = void 0;
@@ -2700,7 +2700,7 @@ __decorateClass2([
 ], OkDataTable.prototype, "menuOpen");
 define("ok-data-table", OkDataTable);
 
-// node_modules/.pnpm/@erplora+module-sdk@file+..+hub+packages+module-sdk/node_modules/@erplora/module-sdk/src/index.ts
+// ../hub/packages/module-sdk/src/index.ts
 function isEmpty(v3) {
   return v3 === null || v3 === void 0 || v3 === "";
 }
@@ -2818,7 +2818,7 @@ function createListController(client, queryName, onChange = () => {
   return new ListController(client, queryName, onChange, opts);
 }
 
-// modules/online_booking/locales/es.json
+// ../modules-workspace/modules/online_booking/locales/es.json
 var es_default = {
   name: "Reservas online",
   navigation: {
@@ -2882,7 +2882,7 @@ var es_default = {
   }
 };
 
-// modules/online_booking/locales/en.json
+// ../modules-workspace/modules/online_booking/locales/en.json
 var en_default = {
   name: "Online Booking",
   navigation: {
@@ -2946,7 +2946,7 @@ var en_default = {
   }
 };
 
-// modules/online_booking/ui/components/erp-online-booking-list/erp-online-booking-list.ts
+// ../modules-workspace/modules/online_booking/ui/components/erp-online-booking-list/erp-online-booking-list.ts
 var CATALOG = { es: es_default, en: en_default };
 function statusLabel(status) {
   const map = {
@@ -3161,196 +3161,6 @@ __decorateClass([
   r5()
 ], ErpOnlineBookingList.prototype, "newDuration", 2);
 define("erp-online-booking-list", ErpOnlineBookingList);
-
-// modules/online_booking/ui/components/erp-online-booking-settings/erp-online-booking-settings.ts
-var CATALOG2 = { es: es_default, en: en_default };
-var DEFAULTS = {
-  is_enabled: 0,
-  page_title: "Book an Appointment",
-  welcome_message: "",
-  primary_color: "#6366f1",
-  logo_url: "",
-  require_phone: 1,
-  require_email: 1,
-  allow_staff_selection: 1,
-  allow_notes: 1,
-  min_advance_hours: 2,
-  max_advance_days: 30,
-  slot_duration_minutes: 30,
-  buffer_minutes: 0,
-  confirmation_message: "",
-  cancellation_policy: ""
+export {
+  ErpOnlineBookingList
 };
-function erplora2() {
-  const c5 = globalThis.erplora;
-  if (!c5) throw new Error("erplora SDK no inicializado por el shell");
-  return c5;
-}
-var ErpOnlineBookingSettings = class extends i3 {
-  constructor() {
-    super(...arguments);
-    this.s = { ...DEFAULTS };
-    this.loading = true;
-    this.saving = false;
-    this.error = "";
-    this.saved = false;
-    this.onLocaleChange = () => this.requestUpdate();
-  }
-  static {
-    this.styles = i`
-    :host { display:block; font-family: system-ui, sans-serif; color: var(--ion-text-color, #1c1b18); }
-    header { display:flex; gap:.5rem; align-items:center; margin-bottom:.75rem; }
-    h2 { margin:0; font-size:1.15rem; flex:1; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(14rem,1fr)); gap:.75rem; margin-bottom:1rem; }
-    .field { display:flex; flex-direction:column; gap:.25rem; }
-    label { font-size:.85rem; color: var(--ion-color-medium,#6b6557); }
-    .row { display:flex; align-items:center; gap:.5rem; }
-    .err { color:#d9480f; font-weight:600; }
-    .ok { color:#2b8a3e; font-weight:600; }
-    .actions { display:flex; gap:.5rem; margin-top:.5rem; }
-  `;
-  }
-  // TODO-LIT: componentWillLoad → connectedCallback. Recuerda: connectedCallback se dispara
-  // en CADA reconexión al DOM (no solo en el primer montaje). Si la init debe correr una
-  // sola vez tras el primer render, considera firstUpdated() en su lugar.
-  async connectedCallback() {
-    super.connectedCallback();
-    window.addEventListener("erplora:locale-changed", this.onLocaleChange);
-    await this.refresh();
-  }
-  disconnectedCallback() {
-    window.removeEventListener("erplora:locale-changed", this.onLocaleChange);
-    super.disconnectedCallback();
-  }
-  async refresh() {
-    this.loading = true;
-    this.error = "";
-    try {
-      const rows = await erplora2().query("online_booking.settings.get");
-      const row = Array.isArray(rows) ? rows[0] : rows;
-      this.s = row ? { ...DEFAULTS, ...row } : { ...DEFAULTS };
-    } catch (e5) {
-      this.error = e5 instanceof Error ? e5.message : erplora2().t(CATALOG2, "ui.errorLoadSettings");
-    } finally {
-      this.loading = false;
-    }
-  }
-  set(key, value) {
-    this.s = { ...this.s, [key]: value };
-    this.saved = false;
-  }
-  async save(ev) {
-    ev.preventDefault();
-    this.saving = true;
-    this.error = "";
-    this.saved = false;
-    try {
-      await erplora2().command("online_booking.settings.upsert", {
-        is_enabled: !!this.s.is_enabled,
-        page_title: this.s.page_title,
-        welcome_message: this.s.welcome_message,
-        primary_color: this.s.primary_color,
-        logo_url: this.s.logo_url,
-        require_phone: !!this.s.require_phone,
-        require_email: !!this.s.require_email,
-        allow_staff_selection: !!this.s.allow_staff_selection,
-        allow_notes: !!this.s.allow_notes,
-        min_advance_hours: Number(this.s.min_advance_hours) || 0,
-        max_advance_days: Number(this.s.max_advance_days) || 1,
-        slot_duration_minutes: Number(this.s.slot_duration_minutes) || 30,
-        buffer_minutes: Number(this.s.buffer_minutes) || 0,
-        confirmation_message: this.s.confirmation_message,
-        cancellation_policy: this.s.cancellation_policy
-      });
-      this.saved = true;
-      await this.refresh();
-    } catch (e5) {
-      this.error = e5 instanceof Error ? e5.message : erplora2().t(CATALOG2, "ui.errorSave");
-    } finally {
-      this.saving = false;
-    }
-  }
-  render() {
-    const t5 = (k2) => erplora2().t(CATALOG2, k2);
-    return b2`<form @submit=${(e5) => this.save(e5)}>
-        <header>
-          <h2>${t5("ui.settingsTitle")}</h2>
-        </header>
-        ${this.error ? b2`<p class="err">${this.error}</p>` : A}
-        ${this.saved ? b2`<p class="ok">${t5("ui.settingsSaved")}</p>` : A}
-        <div class="row" style="margin-bottom:1rem">
-          <ion-toggle ?checked=${!!this.s.is_enabled} @ionChange=${(e5) => this.set("is_enabled", e5.target.checked ? 1 : 0)}></ion-toggle>
-          <label>${t5("ui.labelPublicEnabled")}</label>
-        </div>
-        <div class="grid">
-          <div class="field">
-            <ion-input fill="outline" label-placement="floating" label=${t5("ui.labelPageTitle")} .value=${this.s.page_title} @ionInput=${(e5) => this.set("page_title", e5.target.value)}></ion-input>
-          </div>
-          <div class="field">
-            <ion-input fill="outline" label-placement="floating" label=${t5("ui.labelPrimaryColor")} .value=${this.s.primary_color} @ionInput=${(e5) => this.set("primary_color", e5.target.value)}></ion-input>
-          </div>
-          <div class="field">
-            <ion-input fill="outline" label-placement="floating" label=${t5("ui.labelLogoUrl")} .value=${this.s.logo_url} @ionInput=${(e5) => this.set("logo_url", e5.target.value)}></ion-input>
-          </div>
-          <div class="field">
-            <ion-input fill="outline" label-placement="floating" label=${t5("ui.labelMinAdvanceHours")} type="number" min="0" max="168" .value=${String(this.s.min_advance_hours)} @ionInput=${(e5) => this.set("min_advance_hours", Number(e5.target.value))}></ion-input>
-          </div>
-          <div class="field">
-            <ion-input fill="outline" label-placement="floating" label=${t5("ui.labelMaxAdvanceDays")} type="number" min="1" max="365" .value=${String(this.s.max_advance_days)} @ionInput=${(e5) => this.set("max_advance_days", Number(e5.target.value))}></ion-input>
-          </div>
-          <div class="field">
-            <ion-input fill="outline" label-placement="floating" label=${t5("ui.labelSlotDuration")} type="number" min="5" max="480" .value=${String(this.s.slot_duration_minutes)} @ionInput=${(e5) => this.set("slot_duration_minutes", Number(e5.target.value))}></ion-input>
-          </div>
-          <div class="field">
-            <ion-input fill="outline" label-placement="floating" label=${t5("ui.labelBuffer")} type="number" min="0" max="120" .value=${String(this.s.buffer_minutes)} @ionInput=${(e5) => this.set("buffer_minutes", Number(e5.target.value))}></ion-input>
-          </div>
-        </div>
-        <div class="grid">
-          <div class="row">
-            <ion-toggle ?checked=${!!this.s.require_phone} @ionChange=${(e5) => this.set("require_phone", e5.target.checked ? 1 : 0)}></ion-toggle>
-            <label>${t5("ui.labelRequirePhone")}</label>
-          </div>
-          <div class="row">
-            <ion-toggle ?checked=${!!this.s.require_email} @ionChange=${(e5) => this.set("require_email", e5.target.checked ? 1 : 0)}></ion-toggle>
-            <label>${t5("ui.labelRequireEmail")}</label>
-          </div>
-          <div class="row">
-            <ion-toggle ?checked=${!!this.s.allow_staff_selection} @ionChange=${(e5) => this.set("allow_staff_selection", e5.target.checked ? 1 : 0)}></ion-toggle>
-            <label>${t5("ui.labelAllowStaffSelection")}</label>
-          </div>
-          <div class="row">
-            <ion-toggle ?checked=${!!this.s.allow_notes} @ionChange=${(e5) => this.set("allow_notes", e5.target.checked ? 1 : 0)}></ion-toggle>
-            <label>${t5("ui.labelAllowNotes")}</label>
-          </div>
-        </div>
-        <div class="field">
-          <ion-textarea fill="outline" label-placement="floating" label=${t5("ui.labelWelcomeMessage")} .value=${this.s.welcome_message} @ionInput=${(e5) => this.set("welcome_message", e5.target.value)}></ion-textarea>
-        </div>
-        <div class="field">
-          <ion-textarea fill="outline" label-placement="floating" label=${t5("ui.labelConfirmationMessage")} .value=${this.s.confirmation_message} @ionInput=${(e5) => this.set("confirmation_message", e5.target.value)}></ion-textarea>
-        </div>
-        <div class="field">
-          <ion-textarea fill="outline" label-placement="floating" label=${t5("ui.labelCancellationPolicy")} .value=${this.s.cancellation_policy} @ionInput=${(e5) => this.set("cancellation_policy", e5.target.value)}></ion-textarea>
-        </div>
-        <div class="actions">
-          <ion-button type="submit" ?disabled=${this.saving || this.loading}>${this.saving ? t5("ui.buttonSaving") : t5("ui.buttonSave")}</ion-button>
-        </div>
-      </form>`;
-  }
-};
-__decorateClass([
-  r5()
-], ErpOnlineBookingSettings.prototype, "s", 2);
-__decorateClass([
-  r5()
-], ErpOnlineBookingSettings.prototype, "loading", 2);
-__decorateClass([
-  r5()
-], ErpOnlineBookingSettings.prototype, "saving", 2);
-__decorateClass([
-  r5()
-], ErpOnlineBookingSettings.prototype, "error", 2);
-__decorateClass([
-  r5()
-], ErpOnlineBookingSettings.prototype, "saved", 2);
-define("erp-online-booking-settings", ErpOnlineBookingSettings);

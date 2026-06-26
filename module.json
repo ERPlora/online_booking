@@ -43,14 +43,15 @@
       "label": "Bookings",
       "icon": "calendar-outline",
       "component": "erp-online-booking-list"
-    },
-    {
-      "id": "settings",
-      "label": "Settings",
-      "icon": "settings-outline",
-      "component": "erp-online-booking-settings"
     }
   ],
+  "settings": {
+    "title": "Reserva online",
+    "icon": "globe-outline",
+    "schema": "schemas/settings_upsert.json",
+    "get": "online_booking.settings.get",
+    "set": "online_booking.settings.upsert"
+  },
   "migrations": {
     "sqlite": [
       "migrations/sqlite/001_init.sql",
