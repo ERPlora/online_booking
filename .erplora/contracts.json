@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "module": "online_booking",
+  "consumes": {
+    "queries": [
+      "online_booking.bookings.list",
+      "online_booking.settings.get"
+    ],
+    "optional_queries": [],
+    "commands": [
+      "online_booking.bookings.cancel",
+      "online_booking.bookings.complete",
+      "online_booking.bookings.confirm",
+      "online_booking.bookings.create",
+      "online_booking.bookings.delete",
+      "online_booking.bookings.no_show",
+      "online_booking.settings.upsert"
+    ],
+    "events": [
+      "online_booking.booking.cancelled",
+      "online_booking.booking.completed",
+      "online_booking.booking.confirmed",
+      "online_booking.booking.created",
+      "online_booking.booking.deleted",
+      "online_booking.booking.no_show"
+    ],
+    "slots": []
+  }
+}

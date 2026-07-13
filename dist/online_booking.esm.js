@@ -3206,13 +3206,13 @@ var ErpOnlineBookingList = class extends i3 {
     await this.ctrl.load();
     try {
       const offs = [
-        "online_booking.booking.created",
-        "online_booking.booking.confirmed",
-        "online_booking.booking.cancelled",
-        "online_booking.booking.completed",
-        "online_booking.booking.no_show",
-        "online_booking.booking.deleted"
-      ].map((ev) => erplora().on(ev, () => this.ctrl.load()));
+        erplora().on("online_booking.booking.created", () => this.ctrl.load()),
+        erplora().on("online_booking.booking.confirmed", () => this.ctrl.load()),
+        erplora().on("online_booking.booking.cancelled", () => this.ctrl.load()),
+        erplora().on("online_booking.booking.completed", () => this.ctrl.load()),
+        erplora().on("online_booking.booking.no_show", () => this.ctrl.load()),
+        erplora().on("online_booking.booking.deleted", () => this.ctrl.load())
+      ];
       this.unsub = () => offs.forEach((off) => off());
     } catch {
     }

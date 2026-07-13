@@ -150,14 +150,16 @@ export class ErpOnlineBookingList extends LitElement {
     });
     await this.ctrl.load();
     try {
+            // Una suscripción por evento, con su literal EN la llamada (ADR-0127: el extractor
+      // de contratos no sigue arrays; el nombre vive donde se usa).
       const offs = [
-        'online_booking.booking.created',
-        'online_booking.booking.confirmed',
-        'online_booking.booking.cancelled',
-        'online_booking.booking.completed',
-        'online_booking.booking.no_show',
-        'online_booking.booking.deleted',
-      ].map((ev) => erplora().on(ev, () => this.ctrl.load()));
+        erplora().on('online_booking.booking.created', () => this.ctrl.load()),
+        erplora().on('online_booking.booking.confirmed', () => this.ctrl.load()),
+        erplora().on('online_booking.booking.cancelled', () => this.ctrl.load()),
+        erplora().on('online_booking.booking.completed', () => this.ctrl.load()),
+        erplora().on('online_booking.booking.no_show', () => this.ctrl.load()),
+        erplora().on('online_booking.booking.deleted', () => this.ctrl.load()),
+      ];
       this.unsub = () => offs.forEach((off) => off());
     } catch {
       /* sin SDK (preview) → sin reactividad en vivo */
