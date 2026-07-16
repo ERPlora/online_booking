@@ -1,3 +1,6 @@
+-- PG-compat (auditoría pm#16, 07-17): columna CUALIFICADA en DO UPDATE — sin cualificar
+-- es AMBIGUA en Postgres (error de parseo; SQLite lo tolera). Mismo bug que mató la agenda
+-- de appointments en Hub Cloud (appointments#19).
 -- Incrementa atómicamente el contador de booking_reference del hub (upsert).
 -- Primera op de `online_booking.bookings.create` (misma transacción que el INSERT).
 -- En la primera alta se siembra desde el max() de las referencias BK-% ya existentes
@@ -13,4 +16,4 @@ VALUES (
         WHERE hub_id = :hub_id AND booking_reference LIKE 'BK-%'
     ), 0) + 1
 )
-ON CONFLICT (hub_id) DO UPDATE SET last_number = last_number + 1;
+ON CONFLICT (hub_id) DO UPDATE SET last_number = online_booking_reference_counter.last_number + 1;
