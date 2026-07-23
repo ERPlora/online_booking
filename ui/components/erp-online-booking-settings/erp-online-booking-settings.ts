@@ -1,6 +1,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { state } from 'lit/decorators.js';
 import { define } from '@erplora/outfitkit/define';
+import '@erplora/outfitkit/ok-inline-feedback';
 // Catálogo i18n del módulo (ADR-0055): esbuild inlinea estos JSON en el `dist` del WC. Los textos
 // internos se resuelven con `erplora.t(CATALOG, 'ui.clave')` (idioma activo, fallback locale→en→clave).
 import esLocale from '../../../locales/es.json';
@@ -154,7 +155,7 @@ export class ErpOnlineBookingSettings extends LitElement {
         <header>
           <h2>${t('ui.settingsTitle')}</h2>
         </header>
-        ${this.error ? html`<p class="err">${this.error}</p>` : nothing}
+        ${this.error ? html`<ok-inline-feedback tone="danger" icon="alert-circle-outline">${this.error}</ok-inline-feedback>` : nothing}
         ${this.saved ? html`<p class="ok">${t('ui.settingsSaved')}</p>` : nothing}
         <div class="row" style="margin-bottom:1rem">
           <ion-toggle ?checked=${!!this.s.is_enabled} @ionChange=${(e: any) => this.set('is_enabled', e.target.checked ? 1 : 0)}></ion-toggle>
