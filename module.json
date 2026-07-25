@@ -1,7 +1,7 @@
 {
   "id": "online_booking",
   "name": "Online Booking",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "agent": {
     "description": "Manages online customer bookings: create, confirm, cancel, complete and track no-shows, and configure booking settings.",
     "keywords": [
@@ -52,10 +52,11 @@
     }
   ],
   "migrations": {
-    "sqlite": [
-      "migrations/sqlite/001_init.sql",
-      "migrations/sqlite/002_reference_counter.sql",
-      "migrations/sqlite/003_status_transition_guards.sql"
+    "postgres": [
+      "migrations/postgres/001_init.sql",
+      "migrations/postgres/002_reference_counter.sql",
+      "migrations/postgres/003_status_transition_guards.sql",
+      "migrations/postgres/004_booking_window_guards.sql"
     ]
   },
   "queries": {
