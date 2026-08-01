@@ -13,4 +13,5 @@ VALUES (
         WHERE hub_id = :hub_id AND booking_reference LIKE 'BK-%'
     ), 0) + 1
 )
-ON CONFLICT (hub_id) DO UPDATE SET last_number = last_number + 1;
+ON CONFLICT (hub_id) DO UPDATE
+SET last_number = online_booking_reference_counter.last_number + 1;
