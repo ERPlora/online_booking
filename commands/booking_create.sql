@@ -12,12 +12,25 @@ INSERT INTO online_booking_booking
    customer_phone, service_id, service_name, staff_id, staff_name,
    booking_date, booking_time, duration_minutes, status, booking_type,
    notes, is_deleted, created_by, updated_by, created_at, updated_at)
-VALUES
-  (:new_id, :hub_id,
-   'BK-' || erp_pad((
-       SELECT last_number FROM online_booking_reference_counter WHERE hub_id = :hub_id
-   ), 5),
-   :customer_id, :customer_name, :customer_email,
-   :customer_phone, :service_id, :service_name, :staff_id, :staff_name,
-   :booking_date, :booking_time, :duration_minutes, 'pending', :booking_type,
-   :notes, 0, :current_user_id, :current_user_id, :now, :now);
+SELECT
+  :new_id, :hub_id,
+  'BK-' || erp_pad((
+  SELECT last_number FROM online_booking_reference_counter WHERE hub_id = :hub_id
+  ), 5),
+  :customer_id, :customer_name, :customer_email,
+  :customer_phone, :service_id, :service_name, :staff_id, :staff_name,
+  :booking_date, :booking_time, :duration_minutes, 'pending', :booking_type,
+  :notes, 0, :current_user_id, :current_user_id, :now, :now
+FROM online_booking_settings st
+WHERE st.hub_id = :hub_id
+  AND st.is_deleted = 0
+  -- VENTANA DE RESERVA (online_booking#10). Los números son del NEGOCIO, no constantes: salen de
+  -- `online_booking_settings`. Y se miden contra `:now`, el reloj del servidor — nunca contra una
+  -- fecha que mande el llamante, que es justo lo que un canal público puede falsear.
+  --
+  -- `erp_datediff_days` devuelve la diferencia FRACCIONARIA en días, así que ×24 son las horas de
+  -- antelación sin necesidad de otro helper.
+  AND erp_datediff_days(erp_dt(:booking_date || 'T' || :booking_time), erp_dt(:now)) * 24
+      >= st.min_advance_hours
+  AND erp_datediff_days(erp_dt(:booking_date || 'T' || :booking_time), erp_dt(:now))
+      <= st.max_advance_days;

@@ -7,4 +7,7 @@ SET status = 'confirmed',
     confirmed_at = :now,
     updated_by = :current_user_id,
     updated_at = :now
-WHERE id = :booking_id AND hub_id = :hub_id AND is_deleted = 0;
+-- Solo se confirma lo que está PENDIENTE. Confirmar dos veces, o confirmar algo ya cancelado,
+-- no es una operación: es un error del llamante (online_booking#10).
+WHERE id = :booking_id AND hub_id = :hub_id AND is_deleted = 0
+  AND status = 'pending';

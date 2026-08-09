@@ -1,7 +1,30 @@
--- Online_booking · 004_booking_window_guards.sql (Postgres).
--- Los guards de 004_booking_window_guards se implementaron como TRIGGERS
--- SQLite (strftime/datetime/RAISE), que NO traducen a Postgres de forma
--- mecánica. En cloud son defensa-en-profundidad redundante: el runtime
--- valida el mismo write en origen (local-first, ADR-0031) antes de sincronizar.
--- PENDIENTE (columna humano): reimplementar como trigger plpgsql si se quiere
--- el guard también server-side. Por ahora: no-op portable.
+-- Online_booking · 004_booking_window_guards.sql (Postgres) — SIN sentencias, a propósito.
+--
+-- Misma historia que 003: este fichero estuvo vacío justificándose en local-first (ADR-0031) y en
+-- una sincronización con cloud que ADR-0154/0040 retiraron. Con SQLite fuera del proyecto, la
+-- ventana de reserva no se comprobaba **en ningún sitio**: `booking_create.sql` era un
+-- `INSERT … VALUES` que aceptaba cualquier fecha y cualquier hora.
+--
+-- **Dónde vive ahora el guard: en `booking_create.sql`** (online_booking#10). El `INSERT` pasó a
+-- `INSERT … SELECT … FROM online_booking_settings`, así que la reserva solo se escribe si cae
+-- dentro de la ventana que el NEGOCIO configuró:
+--
+--   · `min_advance_hours` — no se reserva para dentro de diez minutos;
+--   · `max_advance_days`  — ni para dentro de un año.
+--
+-- Dos decisiones que importan:
+--
+--   1. **Los números salen de los ajustes, no de constantes.** Si estuvieran clavados en el SQL, la
+--      pantalla de ajustes configuraría algo que nadie lee — el mismo defecto que services#13.
+--   2. **La medida es contra `:now`, el reloj del SERVIDOR**, nunca contra una fecha del payload.
+--      Es la diferencia entre una ventana y una sugerencia, y cuenta doble cuando el canal es
+--      público (online_booking#13): lo que manda el cliente es una propuesta, no un hecho.
+--
+-- La aritmética usa el subconjunto portable: `erp_dt` normaliza el ISO y `erp_datediff_days`
+-- devuelve la diferencia **fraccionaria** en días, así que ×24 son horas sin más helpers.
+--
+-- Y como en 003, el rechazo lo hace visible `expect_rows: {op: min, n: 1}`: fuera de ventana no se
+-- escribe nada y el llamante recibe `online_booking.outside_booking_window`, no un OK silencioso.
+--
+-- El fichero se conserva porque su nombre ya está registrado en `_hub_migrations` de los hubs
+-- instalados: borrarlo no lo des-aplicaría y sí rompería la correspondencia con el manifest.
