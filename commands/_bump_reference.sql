@@ -13,4 +13,10 @@ VALUES (
         WHERE hub_id = :hub_id AND booking_reference LIKE 'BK-%'
     ), 0) + 1
 )
-ON CONFLICT (hub_id) DO UPDATE SET last_number = last_number + 1;
+-- `online_booking_reference_counter.last_number`, CUALIFICADO. Sin la tabla delante, Postgres no
+-- sabe si el `last_number` de la derecha es el de la fila existente o el de la propuesta y aborta
+-- con «column reference "last_number" is ambiguous» — o sea que **crear una reserva fallaba
+-- entero**, porque el bump va en la misma transacción que el INSERT. Con SQLite no se notaba;
+-- desde ADR-0154 Postgres es el único dialecto (pm#16).
+ON CONFLICT (hub_id) DO UPDATE
+    SET last_number = online_booking_reference_counter.last_number + 1;

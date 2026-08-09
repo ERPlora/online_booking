@@ -1,7 +1,26 @@
--- Online_booking · 003_status_transition_guards.sql (Postgres).
--- Los guards de 003_status_transition_guards se implementaron como TRIGGERS
--- SQLite (strftime/datetime/RAISE), que NO traducen a Postgres de forma
--- mecánica. En cloud son defensa-en-profundidad redundante: el runtime
--- valida el mismo write en origen (local-first, ADR-0031) antes de sincronizar.
--- PENDIENTE (columna humano): reimplementar como trigger plpgsql si se quiere
--- el guard también server-side. Por ahora: no-op portable.
+-- Online_booking · 003_status_transition_guards.sql (Postgres) — SIN sentencias, a propósito.
+--
+-- Este fichero estuvo vacío durante meses con una nota que decía que los guards se habían escrito
+-- como triggers SQLite y que en cloud sobraban, porque el runtime validaba el mismo write en origen
+-- bajo la arquitectura local-first de ADR-0031. Las dos mitades dejaron de ser ciertas:
+--
+--   · **SQLite ya no existe** (ADR-0154): no es que el guard no estuviera en Postgres, es que no
+--     estaba en ningún sitio.
+--   · **No hay copia en cloud ni sync** (ADR-0040/0154): «en origen» es ESTA base de datos.
+--   · Y el runtime **no** validaba el mismo write: los cuatro commands de transición eran un
+--     `UPDATE … WHERE id = :booking_id` a secas, sin estado previo. Una reserva cancelada podía
+--     completarse, una completada cancelarse, y cualquiera saltar a cualquier estado.
+--
+-- **Dónde vive ahora el guard: en el COMMAND** (online_booking#10), que es donde este proyecto pone
+-- las invariantes. Cada transición condiciona su `UPDATE` por los estados que la admiten
+-- —`confirm` desde `pending`; `complete` desde `confirmed`; `no_show` desde `pending|confirmed`;
+-- `cancel` por lo que rechaza, `NOT IN ('cancelled','completed')`— y el manifest declara
+-- `expect_rows: {op: min, n: 1}`, así que una transición que no aplica **revierte la transacción
+-- entera y devuelve un código de dominio** en vez de emitir su evento sobre cero filas.
+--
+-- Por qué en el command y no en un trigger plpgsql: el guard así protege a **todo** el que entra por
+-- el dispatcher —la UI, la API pública, un módulo vecino— y su rechazo llega al llamante como un
+-- error traducible, no como una excepción del motor que hay que interpretar.
+--
+-- El fichero se conserva porque su nombre ya está registrado en `_hub_migrations` de los hubs
+-- instalados: borrarlo no lo des-aplicaría y sí rompería la correspondencia con el manifest.

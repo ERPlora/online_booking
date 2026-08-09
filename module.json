@@ -157,6 +157,12 @@
         "commands/_bump_reference.sql",
         "commands/booking_create.sql"
       ],
+      "expect_rows": {
+        "op": "min",
+        "n": 1,
+        "error": "online_booking.outside_booking_window",
+        "message": "That date and time are outside the booking window this business allows."
+      },
       "schema": "schemas/booking_create.json",
       "emit": [
         "online_booking.booking.created"
@@ -171,6 +177,12 @@
       "sql": [
         "commands/booking_confirm.sql"
       ],
+      "expect_rows": {
+        "op": "min",
+        "n": 1,
+        "error": "online_booking.cannot_confirm",
+        "message": "This booking can no longer be confirmed: it is not pending any more."
+      },
       "schema": "schemas/booking_confirm.json",
       "emit": [
         "online_booking.booking.confirmed"
@@ -185,6 +197,12 @@
       "sql": [
         "commands/booking_cancel.sql"
       ],
+      "expect_rows": {
+        "op": "min",
+        "n": 1,
+        "error": "online_booking.cannot_cancel",
+        "message": "This booking can no longer be cancelled: it is already completed or cancelled."
+      },
       "schema": "schemas/booking_cancel.json",
       "emit": [
         "online_booking.booking.cancelled"
@@ -199,6 +217,12 @@
       "sql": [
         "commands/booking_complete.sql"
       ],
+      "expect_rows": {
+        "op": "min",
+        "n": 1,
+        "error": "online_booking.cannot_complete",
+        "message": "This booking cannot be completed: it has not been confirmed."
+      },
       "schema": "schemas/booking_complete.json",
       "emit": [
         "online_booking.booking.completed"
@@ -213,6 +237,12 @@
       "sql": [
         "commands/booking_no_show.sql"
       ],
+      "expect_rows": {
+        "op": "min",
+        "n": 1,
+        "error": "online_booking.cannot_mark_no_show",
+        "message": "This booking cannot be marked as a no-show in its current state."
+      },
       "schema": "schemas/booking_no_show.json",
       "emit": [
         "online_booking.booking.no_show"

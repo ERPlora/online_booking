@@ -8,4 +8,7 @@ SET status = 'cancelled',
     cancellation_reason = :reason,
     updated_by = :current_user_id,
     updated_at = :now
-WHERE id = :booking_id AND hub_id = :hub_id AND is_deleted = 0;
+-- Se cancela cualquier cosa que no haya terminado ya. Se define por lo que RECHAZA: una reserva
+-- completada o ya cancelada no se vuelve a cancelar (online_booking#10).
+WHERE id = :booking_id AND hub_id = :hub_id AND is_deleted = 0
+  AND status NOT IN ('cancelled', 'completed');
