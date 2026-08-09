@@ -280,6 +280,18 @@
       }
     }
   },
+  "events": {
+    "listen": {},
+    "emits": [
+      "online_booking.booking.cancelled",
+      "online_booking.booking.completed",
+      "online_booking.booking.confirmed",
+      "online_booking.booking.created",
+      "online_booking.booking.deleted",
+      "online_booking.booking.no_show",
+      "online_booking.settings.updated"
+    ]
+  },
   "ui": {
     "entry": "dist/online_booking.esm.js"
   }
