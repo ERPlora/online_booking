@@ -1,5 +1,6 @@
 {
   "name": "Reservas online",
+  "description": "Deja que tus clientes reserven por internet, y confirma, cancela o completa la reserva llevando el control de las ausencias.",
   "navigation": {
     "bookings": {
       "label": "Reservas"
