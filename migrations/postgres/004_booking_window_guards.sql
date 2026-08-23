@@ -23,8 +23,16 @@
 -- La aritmética usa el subconjunto portable: `erp_dt` normaliza el ISO y `erp_datediff_days`
 -- devuelve la diferencia **fraccionaria** en días, así que ×24 son horas sin más helpers.
 --
--- Y como en 003, el rechazo lo hace visible `expect_rows: {op: min, n: 1}`: fuera de ventana no se
--- escribe nada y el llamante recibe `online_booking.outside_booking_window`, no un OK silencioso.
+-- Y como en 003, el rechazo lo hace visible la gate `expect_rows` del command — ANCLADA al
+-- INSERT desde hub#1091 (`statement: "commands/booking_create.sql"`): fuera de ventana no se
+-- escribe nada, el lote entero revierte (contador de referencias incluido — una reserva
+-- rechazada no quema número, online_booking#25) y el llamante recibe
+-- `online_booking.outside_booking_window`, no un OK silencioso. El ancla es imprescindible:
+-- el UPSERT del contador de la misma op afecta SIEMPRE 1 fila y, con la suma del lote que la
+-- gate pesaba antes, ese 1 tapaba al 0 del INSERT. El caso «hub sin fila de ajustes» ni
+-- siquiera llega al SQL: lo rechaza el handler de `bookings.create` con
+-- `online_booking.settings_missing` (su propio código, traducido — son fallos de operar
+-- distintos y no comparten mensaje).
 --
 -- El fichero se conserva porque su nombre ya está registrado en `_hub_migrations` de los hubs
 -- instalados: borrarlo no lo des-aplicaría y sí rompería la correspondencia con el manifest.
