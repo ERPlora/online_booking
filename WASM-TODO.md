@@ -5,7 +5,8 @@ declarativos cubren el CRUD (listar, alta, transiciones simples de estado, soft-
 upsert de settings). **Esto** documenta la lógica que NO es expresable en SQL declarativo
 y que debe implementarse como handler WASM (Extism) o capacidad de host, según el contrato
 de hub (`ARQUITECTURA.md` §5.3). El WASM nunca toca la BD: valida/calcula y devuelve
-*intenciones* que el runtime ejecuta. **No** se ha escrito Rust ni `dist/`.
+*intenciones* que el runtime ejecuta. Desde online_booking#25 existe `handler/`
+(`dist/handler.wasm`, función `create_booking`) para lo que sigue abajo.
 
 Origen: `models.py`, `services.py` (`BookingService`, `convert_to_target`), `routes.py`.
 
@@ -16,8 +17,9 @@ Origen: `models.py`, `services.py` (`BookingService`, `convert_to_target`), `rou
 - **Origen**: `OnlineBooking.generate_reference()` — `SELECT max(booking_reference)` con
  `LIKE 'BK-%'`, parsea el número y devuelve `BK-{n+1:05d}`.
 - **Resolución (2026-06-10, issue #1)**: NO hizo falta handler — patrón `sales_sale_counter`
- ("sin read-back desde el guest"): tabla `online_booking_reference_counter` (002), el command
- `bookings.create` ejecuta `commands/_bump_reference.sql` (upsert +1; primera alta siembra
+ ("sin read-back desde el guest"): tabla `online_booking_reference_counter` (002), la intención
+ `_booking_create` (la que emite el handler de `bookings.create` desde online_booking#25)
+ ejecuta `commands/_bump_reference.sql` (upsert +1; primera alta siembra
  desde el `max()` de referencias `BK-%` legacy) y `commands/booking_create.sql` lee el
  contador con subquery — todo en la MISMA transacción. El upsert serializa altas concurrentes
  sobre la fila del hub; único e incremental por hub. `printf()` es SQLite (Postgres: `lpad()`).
@@ -76,6 +78,11 @@ Origen: `models.py`, `services.py` (`BookingService`, `convert_to_target`), `rou
 - **Pendiente runtime**: si se necesita "leer-creando" (lectura que materializa defaults),
  el runtime debe hacer el upsert con defaults en el primer acceso. La UI ya degrada
  mostrando los defaults del schema cuando la query viene vacía.
+- **Decisión online_booking#25 (2026-08-22)**: `bookings.create` NO hace get-or-create — un
+ hub sin fila de ajustes no tiene ventana de reserva que aplicar, así que el handler RECHAZA
+ con `online_booking.settings_missing` (traducido) ANTES de emitir la intención. «Este
+ negocio nunca configuró su página de reservas» y «ese hueco queda fuera de la ventana» son
+ fallos de operar distintos y no comparten mensaje.
 
 ## 6. `convert_to_target` — integración cross-módulo (appointment / table_reservation)
 

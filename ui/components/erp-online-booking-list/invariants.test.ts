@@ -22,7 +22,7 @@ import { describe, expect, it } from 'vitest';
 const ROOT = join(__dirname, '../../..');
 const manifest = JSON.parse(readFileSync(join(ROOT, 'module.json'), 'utf8')) as {
   id: string;
-  commands: Record<string, { sql?: string[]; expect_rows?: { op: string; n: number; error: string; message?: string } }>;
+  commands: Record<string, { sql?: string[]; expect_rows?: { op: string; n: number; error: string; message?: string; statement?: string } }>;
 };
 
 const sqlOf = (rel: string) =>
@@ -57,8 +57,12 @@ describe('a booking cannot jump to any state from any state', () => {
 // The window is not decoration: it is what stops a customer booking for yesterday, for ten minutes
 // from now, or for next year. The numbers belong to the business (`online_booking_settings`), so the
 // guard reads them instead of hardcoding any.
+//
+// Since online_booking#25 the create SQL lives in the internal intent `online_booking._booking_create`
+// (the root `bookings.create` is a WASM command: it refuses a hub with no settings row BEFORE any SQL
+// and then emits that intent) — so that is the command these pins read.
 describe('a booking has to fall inside the window the business configured', () => {
-  const create = () => cmdSql('online_booking.bookings.create');
+  const create = () => cmdSql('online_booking._booking_create');
 
   it('reads the window from the settings of this hub, not from constants', () => {
     const sql = create();
@@ -74,10 +78,43 @@ describe('a booking has to fall inside the window the business configured', () =
   });
 
   it('refuses instead of writing a booking outside the window', () => {
-    const gate = manifest.commands['online_booking.bookings.create'].expect_rows;
+    const gate = manifest.commands['online_booking._booking_create'].expect_rows;
     expect(gate, 'a conditional INSERT with no gate writes nothing and still reports a booking').toBeTruthy();
     expect(gate!.error.split('.')[0]).toBe(manifest.id);
     expect(gate!.message).toBeTruthy();
+  });
+});
+
+// online_booking#25: the counter UPSERT of the same op affects ALWAYS one row, so a gate weighing the
+// batch SUM is satisfied by the very batch that failed — `200 ok`, no booking written, reference
+// number burned. The anchor (`expect_rows.statement`, hub#1091) is what ties the gate to the INSERT.
+describe('the create gate counts the INSERT, not the batch', () => {
+  const root = () =>
+    manifest.commands['online_booking.bookings.create'] as unknown as {
+      handler?: { type: string; function: string };
+      reads?: { query: string; required: boolean }[];
+    };
+
+  it('anchors the gate to the real INSERT (hub#1091)', () => {
+    const gate = manifest.commands['online_booking._booking_create'].expect_rows!;
+    expect(gate.statement, 'without the anchor the counter UPSERT neutralizes the gate').toBe(
+      'commands/booking_create.sql',
+    );
+    expect(manifest.commands['online_booking._booking_create'].sql).toContain(gate.statement);
+  });
+
+  it('refuses a hub with no settings row before any SQL runs, with its own code', () => {
+    const create = root();
+    expect(create.handler?.function, 'the settings pre-check lives in the WASM handler').toBe('create_booking');
+    expect(
+      create.reads?.some((r) => r.query === 'online_booking.settings.get' && r.required),
+      'the handler decides over a pre-loaded read, never over a guess',
+    ).toBe(true);
+    for (const locale of ['en', 'es'] as const) {
+      const errors = JSON.parse(readFileSync(join(ROOT, 'locales', `${locale}.json`), 'utf8')).errors;
+      expect(errors.online_booking.settings_missing, `${locale} must translate settings_missing`).toBeTruthy();
+      expect(errors.online_booking.outside_booking_window, `${locale} must translate outside_booking_window`).toBeTruthy();
+    }
   });
 });
 

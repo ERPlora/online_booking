@@ -153,6 +153,28 @@
     "online_booking.bookings.create": {
       "permission": "online_booking.change_booking",
       "transaction": true,
+      "handler": {
+        "type": "wasm",
+        "file": "dist/handler.wasm",
+        "function": "create_booking"
+      },
+      "reads": [
+        {
+          "query": "online_booking.settings.get",
+          "required": true
+        }
+      ],
+      "schema": "schemas/booking_create.json",
+      "emit": [
+        "online_booking.booking.created"
+      ],
+      "ai": {
+        "description": "Creates a new online booking for a customer (refuses without booking settings or outside the booking window)."
+      }
+    },
+    "online_booking._booking_create": {
+      "permission": "online_booking.change_booking",
+      "transaction": true,
       "sql": [
         "commands/_bump_reference.sql",
         "commands/booking_create.sql"
@@ -160,15 +182,9 @@
       "expect_rows": {
         "op": "min",
         "n": 1,
+        "statement": "commands/booking_create.sql",
         "error": "online_booking.outside_booking_window",
         "message": "That date and time are outside the booking window this business allows."
-      },
-      "schema": "schemas/booking_create.json",
-      "emit": [
-        "online_booking.booking.created"
-      ],
-      "ai": {
-        "description": "Creates a new online booking for a customer."
       }
     },
     "online_booking.bookings.confirm": {
