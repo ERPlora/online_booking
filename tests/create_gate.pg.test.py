@@ -157,15 +157,17 @@ def contract_checks() -> None:
             intent.get("sql"),
         )
 
-    for locale in ("en", "es"):
-        cat = json.loads((MODULE_DIR / "locales" / f"{locale}.json").read_text())
-        codes = cat.get("errors", {}).get("online_booking", {})
-        check_true(
-            f"{locale} translates settings_missing", "settings_missing" in codes
-        )
-        check_true(
-            f"{locale} translates outside_booking_window", "outside_booking_window" in codes
-        )
+    # ADR-0398 + hub#1570: the key is the COMPLETE code, flat. The hub's SDK indexes first-level
+    # `<module>.<snake_case>` keys only (hub#1573), so a bucket grouped by module reads as "nobody
+    # translated this" and a Spanish till keeps the server's English.
+    for code in ("online_booking.settings_missing", "online_booking.outside_booking_window"):
+        check_true(f"module.json declares {code}", code in (MANIFEST.get("errors") or {}))
+        for locale in ("en", "es"):
+            cat = json.loads((MODULE_DIR / "locales" / f"{locale}.json").read_text())
+            text = (cat.get("errors") or {}).get(code)
+            check_true(
+                f"{locale} translates {code}", isinstance(text, str) and bool(text.strip())
+            )
 
 
 contract_checks()

@@ -1,11 +1,13 @@
 {
   "name": "Online Booking",
   "errors": {
-    "online_booking": {
-      "settings_missing": "This business has not set up its booking page yet, so no booking can be accepted. Configure the booking settings first.",
-      "settings_unreadable": "The booking settings could not be read, so nothing was booked. Try again.",
-      "outside_booking_window": "That date and time are outside the booking window this business allows."
-    }
+    "online_booking.cannot_cancel": "This booking can no longer be cancelled: it is already completed or cancelled.",
+    "online_booking.cannot_complete": "This booking cannot be completed: it has not been confirmed.",
+    "online_booking.cannot_confirm": "This booking can no longer be confirmed: it is not pending any more.",
+    "online_booking.cannot_mark_no_show": "This booking cannot be marked as a no-show in its current state.",
+    "online_booking.outside_booking_window": "That date and time are outside the booking window this business allows.",
+    "online_booking.settings_missing": "This business has not set up its booking page yet, so no booking can be accepted. Configure the booking settings first.",
+    "online_booking.settings_unreadable": "The booking settings could not be read, so nothing was booked. Try again."
   },
   "navigation": {
     "bookings": {

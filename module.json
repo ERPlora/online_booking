@@ -296,6 +296,15 @@
       }
     }
   },
+  "errors": {
+    "online_booking.cannot_cancel": {},
+    "online_booking.cannot_complete": {},
+    "online_booking.cannot_confirm": {},
+    "online_booking.cannot_mark_no_show": {},
+    "online_booking.outside_booking_window": {},
+    "online_booking.settings_missing": {},
+    "online_booking.settings_unreadable": {}
+  },
   "events": {
     "listen": {},
     "emits": [
