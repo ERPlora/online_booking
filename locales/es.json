@@ -2,11 +2,13 @@
   "name": "Reservas online",
   "description": "Deja que tus clientes reserven por internet, y confirma, cancela o completa la reserva llevando el control de las ausencias.",
   "errors": {
-    "online_booking": {
-      "settings_missing": "Este negocio aún no ha configurado su página de reservas, así que no se puede aceptar ninguna reserva. Configura primero los ajustes de reservas.",
-      "settings_unreadable": "No se han podido leer los ajustes de reservas, así que no se ha reservado nada. Inténtalo de nuevo.",
-      "outside_booking_window": "Esa fecha y hora quedan fuera de la ventana de reserva que permite este negocio."
-    }
+    "online_booking.cannot_cancel": "Esta reserva ya no se puede cancelar: ya está completada o cancelada.",
+    "online_booking.cannot_complete": "Esta reserva no se puede completar: no se ha confirmado.",
+    "online_booking.cannot_confirm": "Esta reserva ya no se puede confirmar: ya no está pendiente.",
+    "online_booking.cannot_mark_no_show": "Esta reserva no se puede marcar como no presentada en su estado actual.",
+    "online_booking.outside_booking_window": "Esa fecha y hora quedan fuera de la ventana de reserva que permite este negocio.",
+    "online_booking.settings_missing": "Este negocio aún no ha configurado su página de reservas, así que no se puede aceptar ninguna reserva. Configura primero los ajustes de reservas.",
+    "online_booking.settings_unreadable": "No se han podido leer los ajustes de reservas, así que no se ha reservado nada. Inténtalo de nuevo."
   },
   "navigation": {
     "bookings": {

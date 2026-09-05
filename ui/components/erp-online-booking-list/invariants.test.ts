@@ -110,10 +110,13 @@ describe('the create gate counts the INSERT, not the batch', () => {
       create.reads?.some((r) => r.query === 'online_booking.settings.get' && r.required),
       'the handler decides over a pre-loaded read, never over a guess',
     ).toBe(true);
+    // The key is the COMPLETE code, flat: the hub's SDK indexes first-level `<module>.<snake_case>`
+    // keys only (hub#1570/#1573), so a bucket grouped by module reads as "nobody translated this".
     for (const locale of ['en', 'es'] as const) {
       const errors = JSON.parse(readFileSync(join(ROOT, 'locales', `${locale}.json`), 'utf8')).errors;
-      expect(errors.online_booking.settings_missing, `${locale} must translate settings_missing`).toBeTruthy();
-      expect(errors.online_booking.outside_booking_window, `${locale} must translate outside_booking_window`).toBeTruthy();
+      for (const code of ['online_booking.settings_missing', 'online_booking.outside_booking_window']) {
+        expect(errors[code], `${locale} must translate ${code}`).toBeTruthy();
+      }
     }
   });
 });
