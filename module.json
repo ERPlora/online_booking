@@ -294,6 +294,13 @@
       "ai": {
         "description": "Creates or updates the configuration of the online booking module."
       }
+    },
+    "online_booking._on_customer_merged": {
+      "permission": "online_booking.change_booking",
+      "transaction": true,
+      "sql": [
+        "commands/customer_merge_bookings.sql"
+      ]
     }
   },
   "errors": {
@@ -306,7 +313,11 @@
     "online_booking.settings_unreadable": {}
   },
   "events": {
-    "listen": {},
+    "listen": {
+      "customer.merged": {
+        "command": "online_booking._on_customer_merged"
+      }
+    },
     "emits": [
       "online_booking.booking.cancelled",
       "online_booking.booking.completed",

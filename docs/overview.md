@@ -56,7 +56,11 @@ end up, but neither is required and neither is called today.
 | `online_booking.booking.deleted` | it is deleted |
 | `online_booking.settings.updated` | the settings are saved |
 
-**Events it listens to** — none.
+**Events it listens to**
+
+| Event | What it does |
+|---|---|
+| `customer.merged` | when two customer sheets are merged, every online booking of the absorbed sheet (live or deleted, any status) moves to the surviving one, in this hub only; the name, email and phone copied at booking time stay as they were (customers#86) |
 
 ## The lifecycle
 
