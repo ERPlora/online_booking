@@ -1,4 +1,4 @@
-import { LitElement, html, css, nothing } from 'lit';
+import { LitElement, html, css, nothing, type PropertyValues } from 'lit';
 import { state } from 'lit/decorators.js';
 import { define } from '@erplora/outfitkit/define';
 import '@erplora/outfitkit/ok-data-table';
@@ -69,7 +69,11 @@ export class ErpOnlineBookingList extends LitElement {
 
   @state() saving = false;
 
+  /** Refusal of the new-booking save: painted INSIDE the `create` panel form (pm#513). */
   @state() formError = '';
+
+  /** Refusal of a row action: stays on the page, where the action was triggered. */
+  @state() pageError = '';
 
   @state() tick = 0;
 
@@ -201,6 +205,7 @@ export class ErpOnlineBookingList extends LitElement {
       this.newTime = '';
       this.newStaff = '';
       this.newDuration = '30';
+      this.pageError = ''; // a save that worked does not leave an older row refusal in red (staff#75)
       this.dataTable()?.close(); // el panel del «+» taparía la tabla y la reserva recién creada
       await this.ctrl.load();
     } catch (e) {
@@ -213,7 +218,7 @@ export class ErpOnlineBookingList extends LitElement {
   private async onRowAction(ev: CustomEvent<{ actionId: string; row: Record<string, unknown> }>) {
     const { actionId, row } = ev.detail;
     const booking_id = String(row.id);
-    this.formError = '';
+    this.pageError = '';
     try {
       if (actionId === 'confirm') {
         await erplora().command('online_booking.bookings.confirm', { booking_id });
@@ -228,19 +233,28 @@ export class ErpOnlineBookingList extends LitElement {
       }
       await this.ctrl.load();
     } catch (e) {
-      this.formError = e instanceof Error ? e.message : erplora().t(CATALOG, 'ui.errorUpdate');
+      this.pageError = e instanceof Error ? e.message : erplora().t(CATALOG, 'ui.errorUpdate');
     }
   }
 
-  // El título de la vista lo pinta el topbar del shell: repetirlo aquí lo duplicaba en pantalla.
+  // Under 834 px the `create` panel is a full-screen sheet: the refusal is painted inside it and
+  // scrolled into view once, when it appears — not on every re-render while the person fixes a field.
+  updated(changed: PropertyValues): void {
+    super.updated(changed);
+    if (changed.has('formError') && this.formError) {
+      this.renderRoot.querySelector('[data-testid="online-booking-form-error"]')?.scrollIntoView?.({ block: 'center' });
+    }
+  }
+
+  // The view title is painted by the shell topbar: repeating it here duplicated it on screen.
   render() {
     const t = (k: string) => erplora().t(CATALOG, k);
     return html`<div class="page">
-        ${this.formError ? html`<p class="err">${this.formError}</p>` : nothing}
-        ${this.ctrl?.error ? html`<p class="err">${this.ctrl.error}</p>` : nothing}
+        ${this.pageError ? html`<p class="err" data-testid="online-booking-error">${this.pageError}</p>` : nothing}
+        ${this.ctrl?.error ? html`<p class="err" data-testid="online-booking-load-error">${this.ctrl.error}</p>` : nothing}
         <ok-data-table .serverSide=${true} .fill=${true} .addable=${true} .views=${true} .cardTitle=${(row: Record<string, unknown>) => String(row.booking_reference ?? row.customer_name ?? '—')} .columns=${this.columns} .rows=${this.ctrl?.rows ?? []} .total=${this.ctrl?.total ?? 0} .page=${this.ctrl?.state.page ?? 0} .pageSize=${this.ctrl?.state.pageSize ?? 50} .sort=${this.ctrl?.state.sort} .sortDir=${this.ctrl?.state.dir ?? 'asc'} .searchable=${true} .actions=${this.actions} .searchPlaceholder=${t('ui.searchPlaceholder')} .emptyMessage=${this.ctrl?.loading ? t('ui.loading') : t('ui.empty')} @rowAction=${(e: CustomEvent) => this.onRowAction(e)} @pageChange=${(e: CustomEvent<number>) => this.ctrl.setPage(e.detail)} @pageSizeChange=${(e: CustomEvent<number>) => this.ctrl.setPageSize(e.detail)} @sortChange=${(e: CustomEvent<{ sort: string; dir: 'asc' | 'desc' }>) => this.ctrl.setSort(e.detail.sort, e.detail.dir)} @searchChange=${(e: CustomEvent<string>) => this.ctrl.setSearch(e.detail)} @filterChange=${(e: CustomEvent<{ col: string; value: unknown }>) => this.ctrl.setFilter(e.detail.col, e.detail.value)}>
-          <!-- Alta de reserva: se proyecta SIEMPRE (aunque el panel esté cerrado); si solo se
-               pintara al abrirlo, el «+» desplegaría un panel vacío en el primer clic. -->
+          <!-- New booking: projected ALWAYS (even with the panel closed); if it were painted only
+               when opened, the «+» would unfold an empty panel on the first click. -->
           <form slot="create" class="form" @submit=${(e: Event) => this.createBooking(e)}>
             <ion-input fill="outline" label-placement="floating" label=${t('ui.colCustomer')} .value=${this.newCustomer} @ionInput=${(e: any) => (this.newCustomer = e.target.value)}></ion-input>
             <ion-input fill="outline" label-placement="floating" label=${t('ui.colService')} .value=${this.newService} @ionInput=${(e: any) => (this.newService = e.target.value)}></ion-input>
@@ -248,6 +262,7 @@ export class ErpOnlineBookingList extends LitElement {
             <ion-input fill="outline" label-placement="floating" label=${t('ui.colDate')} type="date" .value=${this.newDate} @ionInput=${(e: any) => (this.newDate = e.target.value)}></ion-input>
             <ion-input fill="outline" label-placement="floating" label=${t('ui.colTime')} type="time" .value=${this.newTime} @ionInput=${(e: any) => (this.newTime = e.target.value)}></ion-input>
             <ion-input fill="outline" label-placement="floating" label=${t('ui.placeholderDuration')} type="number" min="5" step="5" .value=${this.newDuration} @ionInput=${(e: any) => (this.newDuration = e.target.value)}></ion-input>
+            ${this.formError ? html`<p class="err" data-testid="online-booking-form-error">${this.formError}</p>` : nothing}
             <ion-button type="submit" size="small" ?disabled=${this.saving || !this.newCustomer || !this.newService || !this.newDate || !this.newTime}>${this.saving ? t('ui.buttonSaving') : t('ui.buttonAdd')}</ion-button>
           </form>
         </ok-data-table>
