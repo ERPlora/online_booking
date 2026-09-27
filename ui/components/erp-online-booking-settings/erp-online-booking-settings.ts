@@ -1,4 +1,4 @@
-import { LitElement, html, css, nothing } from 'lit';
+import { LitElement, html, css, nothing, type PropertyValues } from 'lit';
 import { state } from 'lit/decorators.js';
 import { define } from '@erplora/outfitkit/define';
 // Catálogo i18n del módulo (ADR-0055): esbuild inlinea estos JSON en el `dist` del WC. Los textos
@@ -148,14 +148,24 @@ export class ErpOnlineBookingSettings extends LitElement {
     }
   }
 
+  // The banners sit at the top of a long form whose «Save» is at the bottom: on a phone the outcome
+  // of a save is above the fold, so it is scrolled into view once, when it appears (pm#513).
+  updated(changed: PropertyValues): void {
+    super.updated(changed);
+    if ((changed.has('error') && this.error) || (changed.has('saved') && this.saved)) {
+      const banner = this.renderRoot.querySelector('[data-testid="online-booking-settings-error"], [data-testid="online-booking-settings-saved"]');
+      banner?.scrollIntoView?.({ block: 'center' });
+    }
+  }
+
   render() {
     const t = (k: string) => erplora().t(CATALOG, k);
     return html`<form @submit=${(e) => this.save(e)}>
         <header>
           <h2>${t('ui.settingsTitle')}</h2>
         </header>
-        ${this.error ? html`<p class="err">${this.error}</p>` : nothing}
-        ${this.saved ? html`<p class="ok">${t('ui.settingsSaved')}</p>` : nothing}
+        ${this.error ? html`<p class="err" data-testid="online-booking-settings-error">${this.error}</p>` : nothing}
+        ${this.saved ? html`<p class="ok" data-testid="online-booking-settings-saved">${t('ui.settingsSaved')}</p>` : nothing}
         <div class="row" style="margin-bottom:1rem">
           <ion-toggle ?checked=${!!this.s.is_enabled} @ionChange=${(e: any) => this.set('is_enabled', e.target.checked ? 1 : 0)}></ion-toggle>
           <label>${t('ui.labelPublicEnabled')}</label>

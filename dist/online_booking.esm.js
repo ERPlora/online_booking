@@ -3552,6 +3552,7 @@ var ErpOnlineBookingList = class extends i3 {
     super(...arguments);
     this.saving = false;
     this.formError = "";
+    this.pageError = "";
     this.tick = 0;
     this.newCustomer = "";
     this.newService = "";
@@ -3673,6 +3674,7 @@ var ErpOnlineBookingList = class extends i3 {
       this.newTime = "";
       this.newStaff = "";
       this.newDuration = "30";
+      this.pageError = "";
       this.dataTable()?.close();
       await this.ctrl.load();
     } catch (e5) {
@@ -3684,7 +3686,7 @@ var ErpOnlineBookingList = class extends i3 {
   async onRowAction(ev) {
     const { actionId, row } = ev.detail;
     const booking_id = String(row.id);
-    this.formError = "";
+    this.pageError = "";
     try {
       if (actionId === "confirm") {
         await erplora().command("online_booking.bookings.confirm", { booking_id });
@@ -3699,18 +3701,26 @@ var ErpOnlineBookingList = class extends i3 {
       }
       await this.ctrl.load();
     } catch (e5) {
-      this.formError = e5 instanceof Error ? e5.message : erplora().t(CATALOG, "ui.errorUpdate");
+      this.pageError = e5 instanceof Error ? e5.message : erplora().t(CATALOG, "ui.errorUpdate");
     }
   }
-  // El título de la vista lo pinta el topbar del shell: repetirlo aquí lo duplicaba en pantalla.
+  // Under 834 px the `create` panel is a full-screen sheet: the refusal is painted inside it and
+  // scrolled into view once, when it appears — not on every re-render while the person fixes a field.
+  updated(changed) {
+    super.updated(changed);
+    if (changed.has("formError") && this.formError) {
+      this.renderRoot.querySelector('[data-testid="online-booking-form-error"]')?.scrollIntoView?.({ block: "center" });
+    }
+  }
+  // The view title is painted by the shell topbar: repeating it here duplicated it on screen.
   render() {
     const t5 = (k2) => erplora().t(CATALOG, k2);
     return b2`<div class="page">
-        ${this.formError ? b2`<p class="err">${this.formError}</p>` : A}
-        ${this.ctrl?.error ? b2`<p class="err">${this.ctrl.error}</p>` : A}
+        ${this.pageError ? b2`<p class="err" data-testid="online-booking-error">${this.pageError}</p>` : A}
+        ${this.ctrl?.error ? b2`<p class="err" data-testid="online-booking-load-error">${this.ctrl.error}</p>` : A}
         <ok-data-table .serverSide=${true} .fill=${true} .addable=${true} .views=${true} .cardTitle=${(row) => String(row.booking_reference ?? row.customer_name ?? "\u2014")} .columns=${this.columns} .rows=${this.ctrl?.rows ?? []} .total=${this.ctrl?.total ?? 0} .page=${this.ctrl?.state.page ?? 0} .pageSize=${this.ctrl?.state.pageSize ?? 50} .sort=${this.ctrl?.state.sort} .sortDir=${this.ctrl?.state.dir ?? "asc"} .searchable=${true} .actions=${this.actions} .searchPlaceholder=${t5("ui.searchPlaceholder")} .emptyMessage=${this.ctrl?.loading ? t5("ui.loading") : t5("ui.empty")} @rowAction=${(e5) => this.onRowAction(e5)} @pageChange=${(e5) => this.ctrl.setPage(e5.detail)} @pageSizeChange=${(e5) => this.ctrl.setPageSize(e5.detail)} @sortChange=${(e5) => this.ctrl.setSort(e5.detail.sort, e5.detail.dir)} @searchChange=${(e5) => this.ctrl.setSearch(e5.detail)} @filterChange=${(e5) => this.ctrl.setFilter(e5.detail.col, e5.detail.value)}>
-          <!-- Alta de reserva: se proyecta SIEMPRE (aunque el panel esté cerrado); si solo se
-               pintara al abrirlo, el «+» desplegaría un panel vacío en el primer clic. -->
+          <!-- New booking: projected ALWAYS (even with the panel closed); if it were painted only
+               when opened, the «+» would unfold an empty panel on the first click. -->
           <form slot="create" class="form" @submit=${(e5) => this.createBooking(e5)}>
             <ion-input fill="outline" label-placement="floating" label=${t5("ui.colCustomer")} .value=${this.newCustomer} @ionInput=${(e5) => this.newCustomer = e5.target.value}></ion-input>
             <ion-input fill="outline" label-placement="floating" label=${t5("ui.colService")} .value=${this.newService} @ionInput=${(e5) => this.newService = e5.target.value}></ion-input>
@@ -3718,6 +3728,7 @@ var ErpOnlineBookingList = class extends i3 {
             <ion-input fill="outline" label-placement="floating" label=${t5("ui.colDate")} type="date" .value=${this.newDate} @ionInput=${(e5) => this.newDate = e5.target.value}></ion-input>
             <ion-input fill="outline" label-placement="floating" label=${t5("ui.colTime")} type="time" .value=${this.newTime} @ionInput=${(e5) => this.newTime = e5.target.value}></ion-input>
             <ion-input fill="outline" label-placement="floating" label=${t5("ui.placeholderDuration")} type="number" min="5" step="5" .value=${this.newDuration} @ionInput=${(e5) => this.newDuration = e5.target.value}></ion-input>
+            ${this.formError ? b2`<p class="err" data-testid="online-booking-form-error">${this.formError}</p>` : A}
             <ion-button type="submit" size="small" ?disabled=${this.saving || !this.newCustomer || !this.newService || !this.newDate || !this.newTime}>${this.saving ? t5("ui.buttonSaving") : t5("ui.buttonAdd")}</ion-button>
           </form>
         </ok-data-table>
@@ -3730,6 +3741,9 @@ __decorateClass([
 __decorateClass([
   r5()
 ], ErpOnlineBookingList.prototype, "formError", 2);
+__decorateClass([
+  r5()
+], ErpOnlineBookingList.prototype, "pageError", 2);
 __decorateClass([
   r5()
 ], ErpOnlineBookingList.prototype, "tick", 2);
@@ -3861,14 +3875,23 @@ var ErpOnlineBookingSettings = class extends i3 {
       this.saving = false;
     }
   }
+  // The banners sit at the top of a long form whose «Save» is at the bottom: on a phone the outcome
+  // of a save is above the fold, so it is scrolled into view once, when it appears (pm#513).
+  updated(changed) {
+    super.updated(changed);
+    if (changed.has("error") && this.error || changed.has("saved") && this.saved) {
+      const banner = this.renderRoot.querySelector('[data-testid="online-booking-settings-error"], [data-testid="online-booking-settings-saved"]');
+      banner?.scrollIntoView?.({ block: "center" });
+    }
+  }
   render() {
     const t5 = (k2) => erplora2().t(CATALOG2, k2);
     return b2`<form @submit=${(e5) => this.save(e5)}>
         <header>
           <h2>${t5("ui.settingsTitle")}</h2>
         </header>
-        ${this.error ? b2`<p class="err">${this.error}</p>` : A}
-        ${this.saved ? b2`<p class="ok">${t5("ui.settingsSaved")}</p>` : A}
+        ${this.error ? b2`<p class="err" data-testid="online-booking-settings-error">${this.error}</p>` : A}
+        ${this.saved ? b2`<p class="ok" data-testid="online-booking-settings-saved">${t5("ui.settingsSaved")}</p>` : A}
         <div class="row" style="margin-bottom:1rem">
           <ion-toggle ?checked=${!!this.s.is_enabled} @ionChange=${(e5) => this.set("is_enabled", e5.target.checked ? 1 : 0)}></ion-toggle>
           <label>${t5("ui.labelPublicEnabled")}</label>
