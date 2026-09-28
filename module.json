@@ -1,7 +1,7 @@
 {
   "id": "online_booking",
   "name": "Online Booking",
-  "version": "1.1.19",
+  "version": "1.1.20",
   "description": "Let customers book online, then confirm, cancel or complete the booking and track no-shows.",
   "agent": {
     "description": "Manages online customer bookings: create, confirm, cancel, complete and track no-shows, and configure booking settings.",
