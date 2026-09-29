@@ -19,6 +19,7 @@
 //     no panel is open then, and a message inside a closed panel is just as invisible
 //     (rv-appointments-227).
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { dataTableShowsLoadError } from '@erplora/module-sdk';
 
 const BOOKING = {
   id: 'b1',
@@ -173,7 +174,15 @@ describe('pm#513 · bookings: what goes wrong OUTSIDE the save stays on the page
   it('a list that does not load is shown on the page, not in the panel', async () => {
     loadFails = true;
     const el = await mount('erp-online-booking-list');
-    expect(onPage(el, 'online-booking-load-error')).not.toBeNull();
+    if (dataTableShowsLoadError()) {
+      // The shell's table paints a failed load itself (pm#533): the reason is on the table, and a
+      // page notice as well would say it twice.
+      const table = el.shadowRoot.querySelector<HTMLElement & { error?: string }>('ok-data-table[testid="online-booking-table"]');
+      expect(table?.error).toBe('list down');
+      expect(byId(el, 'online-booking-load-error'), 'said twice').toBeNull();
+    } else {
+      expect(onPage(el, 'online-booking-load-error')).not.toBeNull();
+    }
     expect(anyInPanel(el)).toBeNull();
   });
 
