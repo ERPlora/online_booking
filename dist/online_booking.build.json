@@ -1,7 +1,7 @@
 {
   "file": "dist/online_booking.esm.js",
-  "sources_sha256": "fef2dfd76c8dc1b9e06f7d4b84bcc47918b795cf38d323376963fcac8680b1b0",
+  "sources_sha256": "6199505ad05914dad1b139d0354cacf4dce48624a45cf40cb988b7b8acf093f0",
   "locales_sha256": "fd4b6724ce6964c9f0866dc5a4a9c53bc00f3192904c403db738afc185247bd6",
-  "bundle_sha256": "4d2370f9bd52c2afb9187d0915fe3537e40e30e65537825066849456254490e1",
-  "built_at": "2026-09-27T23:25:53.936Z"
+  "bundle_sha256": "3d0b70cedeab91a10d2a7ec76ecb16be4ccc5bc0939d52a2ed8d613457067604",
+  "built_at": "2026-09-29T21:36:52.807Z"
 }

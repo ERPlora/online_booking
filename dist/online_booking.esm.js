@@ -3271,6 +3271,11 @@ function toMicro(quantity) {
 }
 
 // @erplora/module-sdk/src/index.ts
+function dataTableShowsLoadError() {
+  const registry = globalThis.customElements;
+  const table = registry?.get("ok-data-table");
+  return !!table && "error" in table.prototype;
+}
 function isEmpty(v3) {
   return v3 === null || v3 === void 0 || v3 === "";
 }
@@ -3323,17 +3328,22 @@ var ListController = class {
   get pageCount() {
     return Math.max(1, Math.ceil(this.total / this.state.pageSize));
   }
-  /** (Re)carga la página actual desde el servidor. */
+  /**
+   * (Re)loads the current page from the server. On a phone, after «Load more» (hub#2365), the
+   * current page is everything shown so far: a refresh brings back pages 0..page in one request.
+   */
   async load() {
     const s5 = this.state;
     const mySeq = ++this.seq;
+    const paging = mobilePagingOf(this);
+    const window2 = nextListWindow(paging, s5);
     this.loading = true;
     this.error = "";
     this.onChange();
     try {
       const page = await this.client.queryPage(this.queryName, {
-        limit: s5.pageSize,
-        offset: s5.page * s5.pageSize,
+        limit: window2.limit,
+        offset: window2.offset,
         search: s5.search,
         sort: s5.sort,
         dir: s5.dir,
@@ -3341,13 +3351,19 @@ var ListController = class {
         params: s5.context
       });
       if (mySeq !== this.seq) return;
-      this.rows = page.rows ?? [];
+      const rows = page.rows ?? [];
+      this.rows = window2.append ? [...this.rows, ...rows] : rows;
       this.total = page.total ?? this.rows.length;
+      if (window2.growsTo !== void 0) {
+        s5.page = window2.growsTo;
+        keepAccumulating(paging, () => void this.load());
+      }
     } catch (e5) {
       if (mySeq !== this.seq) return;
       this.rows = [];
       this.total = 0;
-      this.error = e5 instanceof Error ? e5.message : "Error cargando datos";
+      const reason = e5 instanceof Error ? e5.message.trim() : "";
+      this.error = reason || listLoadFailedMessage(activeLocale());
     } finally {
       if (mySeq === this.seq) {
         this.loading = false;
@@ -3355,8 +3371,19 @@ var ListController = class {
       }
     }
   }
+  /**
+   * Goes to `page`. On a phone `<ok-data-table>` has no pager, only «Load more», which asks for
+   * `page + 1`: that one is ADDED under the rows already shown (hub#2365). Any other jump replaces.
+   */
   setPage(page) {
-    this.state.page = Math.max(0, page);
+    const next = Math.max(0, page);
+    const paging = mobilePagingOf(this);
+    if (next === this.state.page + 1 && phoneViewport()?.matches) {
+      paging.growNext = true;
+    } else {
+      stopAccumulating(paging);
+      this.state.page = next;
+    }
     void this.load();
   }
   setSort(sort, dir) {
@@ -3406,6 +3433,53 @@ var ListController = class {
     void this.load();
   }
 };
+var PHONE_MEDIA = "(max-width: 640px)";
+function phoneViewport() {
+  const matchMedia = globalThis.matchMedia;
+  return typeof matchMedia === "function" ? matchMedia(PHONE_MEDIA) : null;
+}
+var mobilePaging = /* @__PURE__ */ new WeakMap();
+function mobilePagingOf(ctrl) {
+  let paging = mobilePaging.get(ctrl);
+  if (!paging) {
+    paging = { accumulated: false, growNext: false };
+    mobilePaging.set(ctrl, paging);
+  }
+  return paging;
+}
+function nextListWindow(paging, s5) {
+  const size = s5.pageSize;
+  const grow = paging.growNext;
+  paging.growNext = false;
+  if (grow) {
+    const target = s5.page + 1;
+    if (paging.accumulated || s5.page === 0) {
+      return { offset: target * size, limit: size, append: true, growsTo: target };
+    }
+    return { offset: 0, limit: (target + 1) * size, append: false, growsTo: target };
+  }
+  if (s5.page === 0) stopAccumulating(paging);
+  if (paging.accumulated) return { offset: 0, limit: (s5.page + 1) * size, append: false };
+  return { offset: s5.page * size, limit: size, append: false };
+}
+function keepAccumulating(paging, reload) {
+  paging.accumulated = true;
+  if (paging.unwatch) return;
+  const viewport = phoneViewport();
+  if (!viewport?.addEventListener) return;
+  const onChange = (e5) => {
+    if (e5.matches) return;
+    stopAccumulating(paging);
+    reload();
+  };
+  viewport.addEventListener("change", onChange);
+  paging.unwatch = () => viewport.removeEventListener?.("change", onChange);
+}
+function stopAccumulating(paging) {
+  paging.accumulated = false;
+  paging.unwatch?.();
+  paging.unwatch = void 0;
+}
 function scaleFilterEdge(edge, scale) {
   const text = typeof edge === "string" ? edge.trim().replace(",", ".") : edge;
   if (text === "" || text === null || text === void 0) return "";
@@ -3420,6 +3494,11 @@ function scaleFilterValue(value, scale) {
   }
   return scaleFilterEdge(value, scale);
 }
+var LIST_LOAD_FAILED_EN = "The hub did not return the data.";
+var LIST_LOAD_FAILED_ES = "El hub no ha devuelto los datos.";
+function listLoadFailedMessage(locale) {
+  return locale.toLowerCase().startsWith("en") ? LIST_LOAD_FAILED_EN : LIST_LOAD_FAILED_ES;
+}
 function createListController(client, queryName, onChange = () => {
 }, opts = {}) {
   return new ListController(client, queryName, onChange, opts);
@@ -3433,6 +3512,13 @@ var ErploraError = class extends Error {
     this.name = "ErploraError";
   }
 };
+function activeLocale() {
+  try {
+    return localStorage.getItem("erplora.locale") || "es";
+  } catch {
+    return "es";
+  }
+}
 function majorToMinor(amount, decimals) {
   const n6 = Number(amount);
   return Number.isFinite(n6) ? Math.round(n6 * 10 ** decimals) : 0;
@@ -3773,8 +3859,8 @@ var ErpOnlineBookingList = class extends i3 {
     const t5 = (k2) => erplora().t(CATALOG, k2);
     return b2`<div class="page">
         ${this.pageError ? b2`<p class="err" data-testid="online-booking-error">${this.pageError}</p>` : A}
-        ${this.ctrl?.error ? b2`<p class="err" data-testid="online-booking-load-error">${this.ctrl.error}</p>` : A}
-        <ok-data-table .serverSide=${true} .fill=${true} .addable=${true} .views=${true} .cardTitle=${(row) => String(row.booking_reference ?? row.customer_name ?? "\u2014")} .columns=${this.columns} .rows=${this.ctrl?.rows ?? []} .total=${this.ctrl?.total ?? 0} .page=${this.ctrl?.state.page ?? 0} .pageSize=${this.ctrl?.state.pageSize ?? 50} .sort=${this.ctrl?.state.sort} .sortDir=${this.ctrl?.state.dir ?? "asc"} .searchable=${true} .actions=${this.actions} .searchPlaceholder=${t5("ui.searchPlaceholder")} .emptyMessage=${this.ctrl?.loading ? t5("ui.loading") : t5("ui.empty")} @rowAction=${(e5) => this.onRowAction(e5)} @pageChange=${(e5) => this.ctrl.setPage(e5.detail)} @pageSizeChange=${(e5) => this.ctrl.setPageSize(e5.detail)} @sortChange=${(e5) => this.ctrl.setSort(e5.detail.sort, e5.detail.dir)} @searchChange=${(e5) => this.ctrl.setSearch(e5.detail)} @filterChange=${(e5) => this.ctrl.setFilter(e5.detail.col, e5.detail.value)}>
+        ${this.ctrl?.error && !dataTableShowsLoadError() ? b2`<p class="err" data-testid="online-booking-load-error">${this.ctrl.error}</p>` : A}
+        <ok-data-table testid="online-booking-table" .error=${this.ctrl?.error ?? ""} @retry=${() => this.ctrl?.load()} .serverSide=${true} .fill=${true} .addable=${true} .views=${true} .cardTitle=${(row) => String(row.booking_reference ?? row.customer_name ?? "\u2014")} .columns=${this.columns} .rows=${this.ctrl?.rows ?? []} .total=${this.ctrl?.total ?? 0} .page=${this.ctrl?.state.page ?? 0} .pageSize=${this.ctrl?.state.pageSize ?? 50} .sort=${this.ctrl?.state.sort} .sortDir=${this.ctrl?.state.dir ?? "asc"} .searchable=${true} .actions=${this.actions} .searchPlaceholder=${t5("ui.searchPlaceholder")} .emptyMessage=${this.ctrl?.loading ? t5("ui.loading") : t5("ui.empty")} @rowAction=${(e5) => this.onRowAction(e5)} @pageChange=${(e5) => this.ctrl.setPage(e5.detail)} @pageSizeChange=${(e5) => this.ctrl.setPageSize(e5.detail)} @sortChange=${(e5) => this.ctrl.setSort(e5.detail.sort, e5.detail.dir)} @searchChange=${(e5) => this.ctrl.setSearch(e5.detail)} @filterChange=${(e5) => this.ctrl.setFilter(e5.detail.col, e5.detail.value)}>
           <!-- New booking: projected ALWAYS (even with the panel closed); if it were painted only
                when opened, the «+» would unfold an empty panel on the first click. -->
           <form slot="create" class="form" @submit=${(e5) => this.createBooking(e5)}>
