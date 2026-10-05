@@ -67,10 +67,7 @@ En este mismo documento se apoya en: ONLINE_BOOKING-F07 (Configurar la página d
 Entra: los textos que teclea la persona (nombre, servicio y personal son texto libre, sin enlazar a Clientes, Servicios ni Personal); la fecha y hora; el reloj del servidor y los ajustes de antelación. La orden también acepta por asistente o API correo, teléfono, notas, ids de cliente/servicio/personal y tipo mesa.
 Sale: una fila pendiente con el nombre, correo y teléfono copiados, y el aviso `online_booking.booking.created` con los datos personales tecleados (nombre, correo, teléfono, notas, servicio, personal, fecha, hora) y **sin el identificador ni la referencia de la reserva** (el id nuevo del aviso no es el de la fila): una automatización no puede volver a encontrarla. Ningún módulo lo escucha, pero Automatizaciones ofrece como disparador todo aviso que declare un módulo instalado, así que esos datos pueden salir por una automatización. La pantalla nunca guarda el identificador de cliente. No crea cita, mesa, ficha de cliente ni aviso a la clienta.
 Si falla: fecha y hora fuera de la ventana (menos de «Antelación mínima» o más de «Antelación máxima», medido con el reloj del servidor): «Esa fecha y hora quedan fuera de la ventana de reserva que permite este negocio.»; sin ajustes guardados: «Este negocio aún no ha configurado su página de reservas, así que no se puede aceptar ninguna reserva…»; ajustes no legibles: «No se han podido leer los ajustes de reservas, así que no se ha reservado nada. Inténtalo de nuevo.». En todos los casos no se escribe nada ni se gasta número de referencia. Un empleado no tiene la orden.
-Implicados: pendiente
-Pendiente de enlazar: appointments — APPOINTMENTS-F01 (Reservar una cita desde la agenda): la reserva online nunca mira la agenda de Citas ni crea la cita, así que puede solaparse con ella
-Pendiente de enlazar: flows — FLOWS-F13 (Elegir cuándo arranca): el aviso de reserva creada es disparador elegible (con frase propia) y lleva datos personales; sale aunque la reserva no se pueda localizar después
-Pendiente de enlazar: reservations — RESERVATIONS-F06 (Tomar una reserva a mano): igual con las mesas; tipo mesa se guarda pero no toca Reservas
+Implicados: APPOINTMENTS-F01, FLOWS-F13, RESERVATIONS-F06
 QA: ninguno
 
 ### ONLINE_BOOKING-F02 Confirmar una reserva
@@ -83,8 +80,7 @@ Pasos:
 Entra: la reserva elegida.
 Sale: estado confirmada y el aviso `online_booking.booking.confirmed`; nada llega a la clienta.
 Si falla: si ya no está pendiente, «Esta reserva ya no se puede confirmar: ya no está pendiente.»; no cambia nada y no sale aviso. Hace falta el permiso propio de confirmar (distinto del de modificar). Por el asistente la tarjeta de confirmación dice «Una acción que esta app no sabe nombrar» (sin etiqueta de orden en `locales/es.json`).
-Implicados: pendiente
-Pendiente de enlazar: flows — FLOWS-F13 (Elegir cuándo arranca): el aviso de confirmada es disparador elegible
+Implicados: FLOWS-F13
 QA: ninguno
 
 ### ONLINE_BOOKING-F03 Completar una reserva
@@ -97,8 +93,7 @@ Pasos:
 Entra: la reserva elegida.
 Sale: estado completada y el aviso `online_booking.booking.completed`. No cobra, no factura, no suma a la ficha del cliente.
 Si falla: si no está confirmada, «Esta reserva no se puede completar: no se ha confirmado.»; una pendiente no se completa.
-Implicados: pendiente
-Pendiente de enlazar: flows — FLOWS-F13 (Elegir cuándo arranca): el aviso de completada es disparador elegible
+Implicados: FLOWS-F13
 QA: ninguno
 
 ### ONLINE_BOOKING-F04 Marcar que no se presentó
@@ -111,8 +106,7 @@ Pasos:
 Entra: la reserva elegida.
 Sale: estado no-show y el aviso `online_booking.booking.no_show`. No cobra ningún cargo ni lo apunta en la ficha del cliente.
 Si falla: sobre una completada, cancelada o ya marcada, «Esta reserva no se puede marcar como no presentada en su estado actual.».
-Implicados: pendiente
-Pendiente de enlazar: flows — FLOWS-F13 (Elegir cuándo arranca): el aviso de no-show tiene frase propia en el catálogo de disparadores
+Implicados: FLOWS-F13
 QA: ninguno
 
 ### ONLINE_BOOKING-F05 Cancelar una reserva
@@ -125,8 +119,7 @@ Pasos:
 Entra: la reserva elegida y, solo por asistente o API, un motivo.
 Sale: estado cancelada y el aviso `online_booking.booking.cancelled`. No avisa a la clienta ni libera nada en Citas o Reservas.
 Si falla: si ya estaba completada o cancelada, «Esta reserva ya no se puede cancelar: ya está completada o cancelada.». También cancela una en estado no-show. Por el asistente, la tarjeta dice «Una acción que esta app no sabe nombrar» y no hay confirmación reforzada (sin `ai.risk`).
-Implicados: pendiente
-Pendiente de enlazar: flows — FLOWS-F13 (Elegir cuándo arranca): el aviso de cancelada tiene frase propia en el catálogo de disparadores
+Implicados: FLOWS-F13
 QA: ninguno
 
 ### ONLINE_BOOKING-F06 Borrar una reserva
@@ -139,8 +132,7 @@ Pasos:
 Entra: la reserva elegida.
 Sale: la fila queda marcada como borrada (no se pierde el dato) y sale `online_booking.booking.deleted`; vale en cualquier estado. La orden no comprueba que haya cambiado una fila: un identificador inexistente o ya borrado contesta bien y emite el aviso igualmente.
 Si falla: sin el permiso de borrar (solo administrador), el hub rechaza la orden. `module.json` no declara `ai.risk` ni etiqueta de orden en `locales`, así que por el asistente se confirmaría con una tarjeta sin riesgo y con el texto genérico «Una acción que esta app no sabe nombrar».
-Implicados: pendiente
-Pendiente de enlazar: flows — FLOWS-F13 (Elegir cuándo arranca): el aviso de borrada sale aunque no haya cambiado ninguna fila (orden sin `expect_rows`)
+Implicados: FLOWS-F13
 QA: ninguno
 
 ### ONLINE_BOOKING-F07 Configurar la página de reservas
@@ -153,8 +145,7 @@ Pasos:
 Entra: los campos del formulario, que viajan todos juntos.
 Sale: una fila única por negocio (se crea la primera vez, después se actualiza) y el aviso `online_booking.settings.updated`. Solo lo leen F01 (antelación mínima y máxima) y la comprobación de que existe la fila. «Página pública activada», título, color, logo, teléfono/correo obligatorios, elegir personal, notas, duración de slot, buffer, mensajes y política de cancelación no los lee ningún código.
 Si falla: sin permiso de administrador, el hub rechaza el guardado; la orden tampoco comprueba que cambie una fila y su aviso de ajustes actualizados sale siempre; un valor fuera de rango (antelación mínima 0–168 h, máxima 1–365 días, slot 5–480, buffer 0–120) lo rechaza el esquema.
-Implicados: pendiente
-Pendiente de enlazar: flows — FLOWS-F13 (Elegir cuándo arranca): el aviso de ajustes actualizados es disparador elegible
+Implicados: FLOWS-F13
 QA: ninguno
 
 ### ONLINE_BOOKING-F08 Ver y buscar las reservas
@@ -181,9 +172,7 @@ Pasos:
 Entra: el aviso `customer.merged` de Clientes con las dos fichas.
 Sale: el identificador de cliente de todas las reservas del negocio de la absorbida (vivas o borradas, de cualquier estado) pasa a la superviviente; nombre, correo y teléfono copiados no se tocan. Repetir el aviso no hace nada.
 Si falla: nada visible; el aviso se reentrega hasta que se aplique. Fusionar a quien nunca reservó no cambia ninguna fila.
-Implicados: pendiente
-Pendiente de enlazar: customers — CUSTOMERS-F13 (Unir dos fichas de la misma persona): emite el aviso que este módulo escucha
-Pendiente de enlazar: appointments — APPOINTMENTS-F23 (Unir las citas al fusionar dos fichas de clienta): mismo aviso, otro módulo
+Implicados: APPOINTMENTS-F23, CUSTOMERS-F13
 QA: ninguno
 
 ## Cobertura contra la referencia
